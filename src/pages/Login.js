@@ -14,7 +14,7 @@ const Login = () => {
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 66px)' }}>
                 <div>
                     <Container>
-                        <div>
+                    <div style={{padding: '0px 30px'}}>
                             <h5 align='center' style={titleStyle}>Acesse sua Conta</h5>
                             <hr style={lineStyle} />
                             <LoginForm />
