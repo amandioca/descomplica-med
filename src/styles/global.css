@@ -15,3 +15,20 @@
 .form-input::placeholder {
     color: var(--color-gray-soft); 
 }
+
+.scroll-content {
+    max-height: 100%;
+    overflow-y: auto;
+    word-wrap: break-word;
+}
+
+::-webkit-scrollbar{
+    width: 12px;
+    padding: 5px;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: var(--color-gray-soft);
+    border-radius: 50px;
+    border: 2px solid var(--color-gray-shadow)
+}
