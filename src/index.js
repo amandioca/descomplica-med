@@ -2,10 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
-import { AuthNavbar, UnauthNavbar } from './components/Navbar'
 import Signup from './pages/Signup'
+import { AuthNavbar, UnauthNavbar } from './components/Navbar'
+import FileMessageBox from './components/FileMessageBox'
 import Login from './pages/Login'
 import './styles/global.css'
+import ChatWorkspace from './pages/ChatWorkspace'
 
 const appName = 'Descomplica Med'
 
@@ -23,7 +25,7 @@ const App = () => {
 
   return (
     <div style={appStyle}>
-      <Login />
+      <FileMessageBox />
     </div>
   )
 }
