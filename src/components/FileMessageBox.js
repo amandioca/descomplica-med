@@ -1,42 +1,39 @@
-import React from "react";
+import React from 'react';
 import '../styles/FileMessageBox.css'
 import mockFile from '../tests/__mocks__/files/file-mock.jpg';
 import fileText from '../assets/svgs/file-text.svg'
 
 const FileMessageBox = ({ file }) => {
-
-    const mock = new File([mockFile], 'file-mock.jpg', {
-        // type: 'image/png',
-        // type: 'image/jpeg',
-        type: 'image/jpg',
-        // type: 'application/pdf',
-    });
+    const fileType = file.type;
 
     return (
         <div>
 
-            {mock.type === 'application/pdf' && (
-                <div className='container-file teste'>
+            {file.type === 'application/pdf' && (
+                <div className='container-file text-file'>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <div className='box-icon text-file'>
+                        <div className='box-icon'>
                             <img src={fileText} alt='ícone de clipe de papel' height='32'></img>
                         </div>
                         <div className='file-details'>
                             <span>
-                                {mock.name}
+                                {file.name}
                             </span>
                             <span>
-                                {mock.type.split('/').pop().toUpperCase()}
+                                {file.type.split('/').pop().toUpperCase()}
                             </span>
                         </div>
                     </div>
                 </div>
             )}
-            {(mock.type === 'image/png' || mock.type === 'image/jpeg' || mock.type === 'image/jpg') && (
-                <div className='container-file image-file'>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <img className='' src={mockFile} alt="teste" />
-                        <img src={URL.createObjectURL(mock)} alt={mock.name} />
+            {(fileType.startsWith('image/')) && (
+                <div className='container-file'>
+                    <div style={{ overflow: 'hidden' }}>
+                        <div className='image-file'>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                <img src={URL.createObjectURL(file)} alt={file.name} />
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

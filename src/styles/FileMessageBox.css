@@ -5,20 +5,20 @@
     border-radius: 8px;
 }
 
-.text-file{
-    width: 300px;
-}
-
-.image-file{
+.image-file {
     height: 100px;
     max-width: 150px;
     align-content: center;
 }
 
 .image-file img {
+    object-fit: contain;
     max-height: 100%;
     max-width: 100%;
-    object-fit: contain;
+}
+
+.text-file {
+    width: 300px;
 }
 
 .box-icon {
@@ -34,6 +34,7 @@
 }
 
 .file-details span {
+    text-align: start;
     display: block;
     overflow: hidden;
     white-space: nowrap;

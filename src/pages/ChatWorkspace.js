@@ -3,6 +3,7 @@ import '../styles/ChatWorkspace.css';
 import { AuthNavbar } from '../components/Navbar';
 import paperclip from '../assets/svgs/paperclip.svg'
 import arrowUp from '../assets/svgs/arrow-up.svg'
+import FileMessageBox from '../components/FileMessageBox';
 
 const ChatWorkspace = () => {
     const [messages, setMessages] = useState([]);
@@ -33,9 +34,11 @@ const ChatWorkspace = () => {
         }
 
         if (inputFile) {
+            console.log('URL: ', URL.createObjectURL(inputFile));
+            console.log('file: ', inputFile);
             const userMessage = {
                 sender: 'user',
-                image: URL.createObjectURL(inputFile),
+                image: inputFile,
                 timestamp: new Date().toLocaleTimeString(),
                 type: 'file',
             };
@@ -56,6 +59,7 @@ const ChatWorkspace = () => {
         }, 1000);
     };
 
+    // TODO: incluir scroll no input text
     return (
         <div align='center'>
             <AuthNavbar />
@@ -70,8 +74,10 @@ const ChatWorkspace = () => {
                                 {message.type === 'text' && (
                                     <span className='message-text'>{message.text}</span>
                                 )}
-                                {message.type === 'file' &&(
-                                     <img src={message.image} alt='Imagem enviada' style={{ maxWidth: '200px' }} />
+                                {message.type === 'file' && (
+                                    <div>
+                                        <FileMessageBox file={message.image}/>
+                                    </div>
                                 )}
                             </div>
                         ))}
@@ -83,8 +89,10 @@ const ChatWorkspace = () => {
                             <input
                                 type='file'
                                 accept='.pdf, .png, .jpg'
-                                onChange={(e) => setInputFile(e.target.files[0]) 
-                                && sendMessage()} />
+                                onChange={(e) => {
+                                    setInputFile(e.target.files[0])
+                                    e.target.value = null;
+                                }} />
                         </label>
                         <input
                             type='text'

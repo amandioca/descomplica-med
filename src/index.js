@@ -25,7 +25,7 @@ const App = () => {
 
   return (
     <div style={appStyle}>
-      <FileMessageBox />
+      <ChatWorkspace></ChatWorkspace>
     </div>
   )
 }
