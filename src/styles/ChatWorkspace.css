@@ -45,24 +45,24 @@
     display: inline-block;
 }
 
-.teste {
+.chat-input {
     background-color: var(--color-gray);
     border-radius: 25px;
     height: auto;
 }
 
-.teste.expanded {
+.chat-input.expanded {
     height: auto;
 }
 
-.chat-input {
+.input-message {
     display: flex;
     padding: 5px;
     padding-left: 20px;
     align-items: center;
 }
 
-.chat-input input {
+.input-message input {
     font-size: 1.125rem;
     outline: none;
     color: var(--color-white);

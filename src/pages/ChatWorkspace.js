@@ -22,6 +22,17 @@ const ChatWorkspace = () => {
     const sendMessage = async () => {
         if (inputMessage.trim() === '' && !inputFile) return;
 
+        if (inputFile) {
+            const userMessage = {
+                sender: 'user',
+                image: inputFile,
+                timestamp: new Date().toLocaleTimeString(),
+                type: 'file',
+            };
+            setMessages((prevMessages) => [...prevMessages, userMessage]);
+            setInputFile(null);
+        }
+        
         if (inputMessage.trim() !== '') {
             const userMessage = {
                 sender: 'user',
@@ -33,16 +44,6 @@ const ChatWorkspace = () => {
             setInputMessage('');
         }
 
-        if (inputFile) {
-            const userMessage = {
-                sender: 'user',
-                image: inputFile,
-                timestamp: new Date().toLocaleTimeString(),
-                type: 'file',
-            };
-            setMessages((prevMessages) => [...prevMessages, userMessage]);
-            setInputFile(null);
-        }
 
         // TODO: teste de desenvolvimento de interface
         const botMessage = {
@@ -84,13 +85,13 @@ const ChatWorkspace = () => {
                         ))}
                         <div ref={messagesEndRef} />
                     </div>
-                    <div className={` teste ${inputFile ? 'expanded' : ''} mb-4`}>
+                    <div className={`chat-input ${inputFile ? 'expanded' : ''} mb-4`}>
                         {inputFile && (
                             <div className="file-preview">
                                 <FileMessageBox file={inputFile} />
                             </div>
                         )}
-                        <div className='chat-input'>
+                        <div className='input-message'>
                             <label className='file-upload-label'>
                                 <img src={paperclip} alt='ícone de clipe de papel' height='24'></img>
                                 <input
