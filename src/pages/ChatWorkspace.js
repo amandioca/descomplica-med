@@ -34,8 +34,6 @@ const ChatWorkspace = () => {
         }
 
         if (inputFile) {
-            console.log('URL: ', URL.createObjectURL(inputFile));
-            console.log('file: ', inputFile);
             const userMessage = {
                 sender: 'user',
                 image: inputFile,
@@ -59,7 +57,10 @@ const ChatWorkspace = () => {
         }, 1000);
     };
 
-    // TODO: incluir scroll no input text
+    /* TODO: 
+    - incluir scroll no input text
+    - adicionar opcao para remover file selecionado
+    */
     return (
         <div align='center'>
             <AuthNavbar />
@@ -76,35 +77,42 @@ const ChatWorkspace = () => {
                                 )}
                                 {message.type === 'file' && (
                                     <div>
-                                        <FileMessageBox file={message.image}/>
+                                        <FileMessageBox file={message.image} />
                                     </div>
                                 )}
                             </div>
                         ))}
                         <div ref={messagesEndRef} />
                     </div>
-                    <div className='chat-input mb-4'>
-                        <label className='file-upload-label'>
-                            <img src={paperclip} alt='ícone de clipe de papel' height='24'></img>
-                            <input
-                                type='file'
-                                accept='.pdf, .png, .jpg'
-                                onChange={(e) => {
-                                    setInputFile(e.target.files[0])
-                                    e.target.value = null;
-                                }} />
-                        </label>
-                        <input
-                            type='text'
-                            placeholder='Mensagem... '
-                            value={inputMessage}
-                            onChange={(e) => setInputMessage(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                        />
-                        <div>
-                            <label className='send-message-label' onClick={sendMessage}>
-                                <img width='24' src={arrowUp} alt='Enviar' />
+                    <div className={` teste ${inputFile ? 'expanded' : ''} mb-4`}>
+                        {inputFile && (
+                            <div className="file-preview">
+                                <FileMessageBox file={inputFile} />
+                            </div>
+                        )}
+                        <div className='chat-input'>
+                            <label className='file-upload-label'>
+                                <img src={paperclip} alt='ícone de clipe de papel' height='24'></img>
+                                <input
+                                    type='file'
+                                    accept='.pdf, .png, .jpg'
+                                    onChange={(e) => {
+                                        setInputFile(e.target.files[0])
+                                        e.target.value = null;
+                                    }} />
                             </label>
+                            <input
+                                type='text'
+                                placeholder='Mensagem... '
+                                value={inputMessage}
+                                onChange={(e) => setInputMessage(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                            />
+                            <div>
+                                <label className='send-message-label' onClick={sendMessage}>
+                                    <img width='24' src={arrowUp} alt='Enviar' />
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
