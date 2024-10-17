@@ -11,6 +11,10 @@ const ChatWorkspace = () => {
     const [inputFile, setInputFile] = useState(null);
     const messagesEndRef = useRef(null);
 
+    const clearInputFile = () => {
+        setInputFile(null)
+    }
+
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -32,7 +36,7 @@ const ChatWorkspace = () => {
             setMessages((prevMessages) => [...prevMessages, userMessage]);
             setInputFile(null);
         }
-        
+
         if (inputMessage.trim() !== '') {
             const userMessage = {
                 sender: 'user',
@@ -88,7 +92,7 @@ const ChatWorkspace = () => {
                     <div className={`chat-input ${inputFile ? 'expanded' : ''} mb-4`}>
                         {inputFile && (
                             <div className="file-preview">
-                                <FileMessageBox file={inputFile} />
+                                <FileMessageBox file={inputFile} preview={true} onClose={clearInputFile} />
                             </div>
                         )}
                         <div className='input-message'>
