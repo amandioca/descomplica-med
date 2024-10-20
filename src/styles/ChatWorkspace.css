@@ -1,0 +1,99 @@
+.chat-container {
+    height: calc(100dvh - 146px);
+    padding: auto;
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.chat-message {
+    margin-bottom: .625rem;
+    display: flex;
+}
+
+.user-message {
+    justify-content: flex-end;
+}
+
+.message-text {
+    display: block;
+    text-align: right;
+    background: var(--color-gray-medium);
+    color: var(--color-white);
+    padding: 10px 20px;
+    border-radius: 25px;
+    max-width: 70%;
+    word-wrap: break-word;
+    display: inline-block;
+}
+
+.bot-message {
+    justify-content: flex-start;
+}
+
+.bot-message span {
+    text-align: left;
+    color: var(--color-white);
+    max-width: 100%;
+    word-wrap: break-word;
+    display: inline-block;
+}
+
+.chat-input {
+    background-color: var(--color-gray);
+    border-radius: 25px;
+    height: auto;
+}
+
+.chat-input.expanded {
+    height: auto;
+}
+
+.input-message {
+    display: flex;
+    padding: 5px;
+    padding-left: 20px;
+    align-items: center;
+}
+
+.input-message input {
+    font-size: 1.125rem;
+    outline: none;
+    color: var(--color-white);
+    background-color: var(--color-gray);
+    border: none;
+    margin-right: 0.625rem;
+    margin-left: 20px;
+    flex: 1;
+}
+
+.file-preview {
+    margin: 10px 20px;
+    border-radius: 15px;
+    display: flex;
+}
+
+.file-upload-label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.file-upload-label input[type="file"] {
+    display: none;
+}
+
+.send-message-label {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-blue-primary);
+    align-content: center;
+    cursor: pointer;
+}

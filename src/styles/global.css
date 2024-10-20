@@ -1,0 +1,34 @@
+:root {
+    --color-blue-primary: #3596FF;
+    --color-blue-secondary: #005DC1;
+    --color-gray-soft: #8a8a8a;
+    --color-gray-light: #757575;
+    --color-gray: #4D4D4D;
+    --color-gray-medium: #333333;
+    --color-gray-shadow: #272727;
+    --color-gray-midnight: #212121;
+    --color-gray-dark: #0f0f0f;
+    --color-white: #e4eaed;
+    --color-black: #262829;
+}
+
+.form-input::placeholder {
+    color: var(--color-gray-soft); 
+}
+
+.scroll-content {
+    max-height: 100%;
+    overflow-y: auto;
+    word-wrap: break-word;
+}
+
+::-webkit-scrollbar{
+    width: 12px;
+    padding: 5px;
+}
+
+::-webkit-scrollbar-thumb{
+    background-color: var(--color-gray-soft);
+    border-radius: 50px;
+    border: 2px solid var(--color-gray-shadow)
+}
