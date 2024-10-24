@@ -1,0 +1,45 @@
+  .main-text {
+    font-size: 2rem; /* Tamanho da fonte */
+    margin: 100px 100; /* Margem em cima e embaixo */
+    font-weight: normal; /* Peso da fonte */
+    margin-top: 250px;
+    text-align: center; /* Centraliza o texto */
+    color: white; /* Cor do texto */
+    
+  }
+  
+  .main-button {
+    background-color: #333333; /* Cor do botão principal */
+    color: white; /* Cor do texto do botão */
+    padding: 10px 20px; /* Padding do botão */
+    border: none; /* Sem borda */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Cursor de ponteiro */
+    font-size: 1.2rem; /* Tamanho da fonte do botão */
+    margin-top: 35px; /* Margem superior */
+    display: block; /* Para que o botão fique em nova linha */
+    margin-left: auto; /* Alinha à direita */
+    margin-right: auto; /* Alinha à esquerda */
+  }
+  
+  .button-container {
+    position: absolute; /* Posiciona os botões de forma absoluta */
+    top: 75px; /* Alinhado com o topo do header */
+    right: 20px; /* Posicionado à direita */
+    display: flex; /* Organiza os botões na horizontal */
+    gap: 10px; /* Espaço entre os botões */
+  }
+  
+  .button {
+    background-color: #333333; /* Cor do botão "entrar" */
+    color: white; /* Cor do texto do botão */
+    border: none; /* Sem borda */
+    padding: 10px 20px; /* Padding do botão */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Cursor de ponteiro */
+  }
+  
+  .register-button {
+    background-color: #3596FF; /* Cor do botão cadastrar */
+  }
+  
