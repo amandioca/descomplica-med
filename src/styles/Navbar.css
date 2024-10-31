@@ -1,0 +1,29 @@
+.navbar-size {
+    height: 66px;
+}
+
+.navbar-bg-unauth {
+    background: linear-gradient(to bottom right, var(--color-blue-primary), var(--color-blue-secondary));
+}
+
+.navbar-bg-auth {
+    background: var(--color-gray-medium);
+}
+
+.navbar-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: 28px;
+    color: #FFF;
+}
+
+.margin-10{
+    margin: 10px;
+}
