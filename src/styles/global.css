@@ -12,6 +12,12 @@
     --color-black: #262829;
 }
 
+body{
+   background-color: var(--color-gray-midnight) !important;
+   min-height: 100vh !important;
+   color: white !important;
+}
+
 .form-input::placeholder {
     color: var(--color-gray-soft); 
 }
