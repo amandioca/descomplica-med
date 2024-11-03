@@ -22,24 +22,34 @@ async function getUsers() {
     try {
         const result = await client.query('SELECT * FROM users');
         return result.rows;
-    } catch (err) {
-        console.error('Error fetching users: ', err);
-        throw new Error('Error fetching users from database');
+    } catch (error) {
+        console.error('Error fetching users: ', error);
+        throw error;
     }
 }
 
 async function getUserByCpf(cpf) {
     try {
         const result = await client.query('SELECT * FROM users WHERE cpf = $1', [cpf]);
-        console.log(result.rows)
         return result.rows;
-    } catch (err) {
-        console.error('Error fetching user by CPF: ', err);
-        throw new Error('Error fetching users from database');
+    } catch (error) {
+        console.error('Error fetching user by CPF: ', error);
+        throw error;
+    }
+}
+
+async function createUser(cpf, fullName, password) {
+    try {
+        const result = await client.query('INSERT INTO users (cpf, full_name, password) VALUES ($1, $2, $3) RETURNING *', [cpf, fullName, password])
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error creating user in database: ', error);
+        throw error;
     }
 }
 
 module.exports = {
     getUsers,
     getUserByCpf,
+    createUser,
 }
