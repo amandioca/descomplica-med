@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS users (
-    cpf CHAR(11) PRIMARY KEY,
+    cpf VARCHAR(11) PRIMARY KEY CHECK (cpf ~ '^[0-9]+$'),
     full_name VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL
 );
