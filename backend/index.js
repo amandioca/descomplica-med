@@ -3,6 +3,7 @@
 require('dotenv').config();
 const express = require('express');
 const dbService = require('./dbService');
+const gemini = require('./geminiService');
 const app = express();
 app.use(express.json());
 
@@ -14,6 +15,21 @@ app.listen(PORT, () => {
 
 app.get('/hello-world', (req, res) => {
     res.send({ message: 'hello world!' })
+});
+
+app.get('/response-gemini', async (req, res) => {
+    const { userMessage } = req.body;
+    try {
+        let result = '';
+        if (userMessage.length > 0) {
+            result = await gemini.getResponseByText(userMessage);
+        } else {
+            result = 'This message is empty'
+        }
+        res.status(200).json({ message: result });
+    } catch (error) {
+        res.status(500).json({ message: `Generic error: ${error}` });
+    }
 });
 
 app.get('/users', async (req, res) => {
