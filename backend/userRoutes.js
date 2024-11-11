@@ -22,6 +22,22 @@ router.get('/:cpf', async (req, res) => {
     }
 });
 
+router.post('/login', async (req, res) => {
+    const { cpf, password } = req.body;
+    try {
+        const result = await dbService.getUserByCpf(cpf);
+        if (result) {
+            if (result.map(user => user.password) == password) {
+                return res.sendStatus(200);
+            }
+        }
+        res.status(401).send({ message: 'Invalid credentials' });
+
+    } catch (error) {
+        res.status(500).json({ message: `Generic error: ${error}` })
+    }
+})
+
 router.post('/', async (req, res) => {
     const { cpf, fullName, password } = req.body;
     try {
