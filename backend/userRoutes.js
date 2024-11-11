@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
         const data = await dbService.getUsers();
         res.json(data);
     } catch (error) {
-        res.status(500).json({ message: 'Connection to the SQL server failed' })
+        res.status(500).json({ message: `Generic error: ${error}` })
     }
 });
 
@@ -16,9 +16,9 @@ router.get('/:cpf', async (req, res) => {
         const user = await dbService.getUserByCpf(req.params.cpf);
         user.length === 1
             ? res.json(user)
-            : res.status(404);
+            : res.status(404).send({ message: 'User not found' });
     } catch (error) {
-        res.status(500).json({ message: 'Connection to the SQL server failed' })
+        res.status(500).json({ message: `Generic error: ${error}` })
     }
 });
 
