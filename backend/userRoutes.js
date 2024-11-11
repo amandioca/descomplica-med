@@ -38,7 +38,7 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.post('/', async (req, res) => {
+router.post('/register', async (req, res) => {
     const { cpf, fullName, password } = req.body;
     try {
         const createdUser = await dbService.createUser(cpf, fullName, password);
