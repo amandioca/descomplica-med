@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { STATUS_CODES } = require('http');
 const { Client } = require('pg');
 
 const client = new Client({
@@ -48,8 +49,35 @@ async function createUser(cpf, fullName, password) {
     }
 }
 
+async function getChatHistoryByUser(cpf) {
+    const status = {
+        code: 501,
+        message: 'Not Implemented'
+    };
+    return status;
+}
+
+async function logMessage(message) {
+    const status = {
+        code: 501,
+        message: 'Not Implemented'
+    };
+    return status;
+}
+
+const messageTemplate = {
+    sender: null,
+    messageType: "",
+    messageText: "",
+    filePath: "",
+    mimetype: "",
+    userCpf: ""
+};
+
 module.exports = {
     getUsers,
     getUserByCpf,
     createUser,
+    logMessage,
+    messageTemplate
 }
