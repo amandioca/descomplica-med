@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS chat_history (
     message_text TEXT DEFAULT NULL,
     file_path VARCHAR(255) DEFAULT NULL,
     message_type VARCHAR(10) CHECK (message_type IN ('text', 'file')) NOT NULL,
+    mimetype VARCHAR(255) DEFAULT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_cpf CHAR(11),
     FOREIGN KEY (user_cpf) REFERENCES users (cpf)
