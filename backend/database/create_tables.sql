@@ -15,5 +15,3 @@ CREATE TABLE IF NOT EXISTS chat_history (
     user_cpf CHAR(11),
     FOREIGN KEY (user_cpf) REFERENCES users (cpf)
 );
-
-SELECT * FROM chat_history;
