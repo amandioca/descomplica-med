@@ -29,20 +29,11 @@ async function checkMessageType(req, res, next) {
     next();
 }
 
-// 2- loga mensagem do usuario db
 function logMessageUser(req, res, next) {
     const { sender, messageType, messageText, path, mimetype, userCpf } = req.body;
-    const message = {
-        ...dbService.messageTemplate,
-        sender: sender,
-        messageType: messageType,
-        messageText: messageText,
-        filePath: path,
-        mimetype: mimetype,
-        userCpf: userCpf
-    };
+    console.log(req.body)
 
-    dbService.logMessage({ message })
+    dbService.logMessage(sender, messageType, messageText, path, mimetype, userCpf)
         .then(() => {
             next();
         })
@@ -52,29 +43,31 @@ function logMessageUser(req, res, next) {
 }
 
 router.post('/send-prompt', checkMessageType, logMessageUser, async (req, res) => {
-    const { messageType, messageText, mimetype } = req.body;
+    const { messageType, messageText, mimetype, userCpf } = req.body;
     try {
-        console.error('AQUI NO ENDPOINT');
-        const result = await sendPromptByTypeMessage(messageType, messageText, mimetype);
-        res.send(result);
-        // 4- envia mensagem para gemini
-        // 5- loga mensagem bot no db
-        // 6- retorna para o usuario a mensagem do bot
+        const resultSendPrompt = await sendPromptByTypeMessage(messageType, messageText, mimetype, userCpf);
+        console.log('TESTE: ' + resultSendPrompt);
+        res.send(resultSendPrompt);
     } catch (error) {
-
+        res.status(500).json({ message: `Generic error: ${error}` });
     }
 });
 
-async function sendPromptByTypeMessage(messageType, prompt, mimetype) {
-    console.error('AQUI NO SEND PROMPT');
-    if (messageType == MessageTypes.FILE)
-        return await geminiService.getResponseByText(prompt);
+async function sendPromptByTypeMessage(messageType, prompt, mimetype, userCpf) {
+    let response = '';
+    try {
+        if (messageType == MessageTypes.FILE)
+            response = await geminiService.getResponseByText(prompt);
+        else if (mimetype == MimeTypes.PDF)
+            next();
+        else
+            next();
 
-    else if (mimetype == MimeTypes.PDF)
-        next();
-
-    else
-        next();
+        await dbService.logMessage('bot', 'text', response, null, null, userCpf);
+        return response;
+    } catch (error) {
+        res.status(500).json({ message: `Generic error in sendPromptByTypeMessage: ${error}` });
+    }
 }
 
 module.exports = router;
