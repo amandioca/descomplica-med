@@ -13,7 +13,7 @@ Simples: insira a imagem PDF do exame desejado e a IA irá gerar uma leitura bá
 
  Facilitar a leitura de exames médicos para usuários que não compreendem as informações fornecidas no laudo médico.
 
-**Como temos resposta acertivas e o que a IA aceita para dar retorno**
+**Como temos resposta assertivas e o que a IA aceita para dar retorno**
 
 Somente assuntos médicos, resultados de exames e conselhos médicos são respondidos ao usuário. São aceitos os tipos PDF, PNG e JPG. Caso o usuário envie outro tipo de arquivo, será avisado e a solicitação será inconclusiva.
 
