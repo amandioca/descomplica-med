@@ -30,10 +30,10 @@ React é uma biblioteca JavaScript de código aberto para a construção de inte
 
  Express é um framework minimalista para Node.js que facilita a construção de servidores web e APIs. Ele fornece uma estrutura simples e flexível para lidar com requisições HTTP, rotas, middlewares e sessões, tornando o desenvolvimento de aplicativos web back-end mais rápido e eficiente.
 
-front:reactjs
+Front:reactjs
 ReactJS é uma biblioteca JavaScript desenvolvida pelo Facebook para a construção de interfaces de usuário (UI) dinâmicas e reutilizáveis. Seu foco principal é a criação de componentes, que são partes independentes da UI, facilitando o desenvolvimento e a manutenção de aplicações interativas.
 
-banco de dados:
+Banco de dados:
 postgree sql
 
 PostgreSQL é um sistema de gerenciamento de banco de dados relacional (SGBDR) de código aberto e altamente robusto. Ele é conhecido por sua conformidade com os padrões SQL e por ser altamente extensível, permitindo que os usuários definam tipos de dados personalizados, funções e até mesmo linguagens de programação para operações de banco de dados.
