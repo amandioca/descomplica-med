@@ -15,6 +15,24 @@ async function getResponseByText(prompt) {
     return result.response.text();
 }
 
+async function getResponseByDocument(prompt) {
+    const status = {
+        code: 501,
+        message: 'Not Implemented'
+    };
+    return status;
+}
+
+async function getResponseByImage(prompt) {
+    const status = {
+        code: 501,
+        message: 'Not Implemented'
+    };
+    return status;
+}
+
 module.exports = {
     getResponseByText,
+    getResponseByImage,
+    getResponseByDocument,
 }

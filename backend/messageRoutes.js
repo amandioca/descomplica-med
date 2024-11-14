@@ -59,9 +59,9 @@ async function sendPromptByTypeMessage(messageType, prompt, mimetype, userCpf) {
         if (messageType == MessageTypes.FILE)
             response = await geminiService.getResponseByText(prompt);
         else if (mimetype == MimeTypes.PDF)
-            next();
+            response = await geminiService.getResponseByDocument(prompt);
         else
-            next();
+            response = await geminiService.getResponseByImage(prompt);
 
         await dbService.logMessage('bot', 'text', response, null, null, userCpf);
         return response;
