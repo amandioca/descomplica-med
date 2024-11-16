@@ -9,11 +9,7 @@ const messageRoutes = require('./messageRoutes');
 const app = express();
 app.use(express.json());
 
-app.use(cors({
-    origin: '*',
-    methods: '*',
-    allowedHeaders: '*'
-}));
+app.use(cors());
 
 app.use('/users', userRoutes);
 app.use('/messages', messageRoutes);

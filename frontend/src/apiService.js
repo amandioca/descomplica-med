@@ -3,11 +3,6 @@ import axios from 'axios';
 const API_URL = process.env.REACT_APP_API_URL;
 
 const request = async (url, method = 'GET', body = null, headers = {}) => {
-    console.log(`${API_URL}${url}`);
-    console.log(method);
-    console.log(body);
-    console.log(headers);
-
     const config = {
         method,
         url: `${API_URL}${url}`,
@@ -20,7 +15,6 @@ const request = async (url, method = 'GET', body = null, headers = {}) => {
 
     try {
         const response = await axios(config);
-        console.log('Response:', response.data);
         return response.data;
     } catch (error) {
         console.log('Error:', error);
@@ -30,18 +24,12 @@ const request = async (url, method = 'GET', body = null, headers = {}) => {
 };
 
 async function sendPromptForGemini(userPrompt) {
-    try {
+    try {        
         return request(
-            '/hello-world',
-            'GET'
-        )
-        
-        // request(
-        //     '/messages/send-prompt',
-        //     'POST',
-        //     userPrompt
-        // )
-
+            '/messages/send-prompt',
+            'POST',
+            userPrompt
+        );
     } catch (error) {
         console.error('Error sending prompt to Gemini:', error.message);
         throw error;
