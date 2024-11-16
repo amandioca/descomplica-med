@@ -31,7 +31,7 @@ async function uploadFileToS3(file, mimetype) {
     }
 }
 
-async function getSignedFileUrl(key) {
+async function generateTempUrl(key) {
     const command = new GetObjectCommand({
         Bucket: process.env.S3_BUCKET_NAME,
         Key: key,
