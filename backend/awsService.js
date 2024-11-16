@@ -1,7 +1,8 @@
-const { S3Client, GetObjectCommand, PutObjectCommand } = require("@aws-sdk/client-s3");
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const fs = require("fs");
-const path = require("path");
+const { S3Client, GetObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
 
 const s3Client = new S3Client({
     region: process.env.AWS_REGION,
@@ -14,7 +15,9 @@ const s3Client = new S3Client({
 async function uploadFileToS3(file, mimetype) {
     const filePath = path.join(__dirname, './mock/file-mock.png');
     const fileContent = fs.readFileSync(filePath);
-    const key = 'test/FILE-TEST-AWSv3.png';
+
+    const hash = generateHash();
+    const key = `test/${hash}.png`;
 
     const params = {
         Bucket: process.env.S3_BUCKET_NAME,
@@ -27,7 +30,7 @@ async function uploadFileToS3(file, mimetype) {
         await s3Client.send(new PutObjectCommand(params));
         return key;
     } catch (error) {
-        console.error("Error uploading file:", error);
+        console.error('Error uploading file:', error);
     }
 }
 
@@ -42,8 +45,13 @@ async function getSignedFileUrl(key) {
         console.error('Signed URL:', signedUrl);
         return signedUrl;
     } catch (error) {
-        console.error("Error generating signed URL", error);
+        console.error('Error generating signed URL', error);
     }
+}
+
+function generateHash(){
+    const hash = crypto.createHash('md5').update(Date.now().toString()).digest('hex');
+    return hash;
 }
 
 module.exports = {
