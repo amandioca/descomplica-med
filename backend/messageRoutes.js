@@ -24,10 +24,10 @@ async function checkMessageType(req, res, next) {
             const path = "/mock/fake_path";
             req.body.path = path;
         }
+        next();
     } catch (error) {
         res.status(500).json({ message: `Generic error in checkMessageType: ${error}` });
     }
-    next();
 }
 
 function logMessageUser(req, res, next) {
@@ -59,13 +59,14 @@ router.post('/send-prompt', checkMessageType, logMessageUser, async (req, res) =
 async function sendPromptByTypeMessage(type, prompt, mimetype) {
     let response = '';
     try {
-        if (type == MessageTypes.FILE)
+        if (type == MessageTypes.TEXT)
             response = await geminiService.getResponseByText(prompt);
         else if (mimetype == MimeTypes.PDF)
             response = await geminiService.getResponseByDocument(prompt);
         else
             response = await geminiService.getResponseByImage(prompt);
 
+        console.log('Response:', response);
         await dbService.logMessage('bot', 'text', response, null, null);
         return response;
     } catch (error) {

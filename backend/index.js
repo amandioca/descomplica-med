@@ -2,11 +2,18 @@
 
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const gemini = require('./geminiService');
 const userRoutes = require('./userRoutes');
 const messageRoutes = require('./messageRoutes');
 const app = express();
 app.use(express.json());
+
+app.use(cors({
+    origin: '*',
+    methods: '*',
+    allowedHeaders: '*'
+}));
 
 app.use('/users', userRoutes);
 app.use('/messages', messageRoutes);
