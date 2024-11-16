@@ -1,19 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button } from 'bootstrap';
 import '../styles/ChatWorkspace.css';
 import { AuthNavbar } from '../components/Navbar';
 import paperclip from '../assets/svgs/paperclip.svg'
 import arrowUp from '../assets/svgs/arrow-up.svg'
 import user from '../assets/svgs/user.svg'
 import FileMessageBox from '../components/FileMessageBox';
+import { sendPromptForGemini } from '../apiService';
 
 const ChatWorkspace = () => {
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     const [inputFile, setInputFile] = useState(null);
     const messagesEndRef = useRef(null);
-
-    const username = 'Vinicius Bizelli';
 
     const clearInputFile = () => {
         setInputFile(null)
@@ -27,44 +25,37 @@ const ChatWorkspace = () => {
         scrollToBottom();
     }, [messages]);
 
-    const sendMessage = async () => {
-        if (inputMessage.trim() === '' && !inputFile) return;
-
-        if (inputFile) {
-            const userMessage = {
-                sender: 'user',
-                image: inputFile,
-                timestamp: new Date().toLocaleTimeString(),
-                type: 'file',
-            };
-            setMessages((prevMessages) => [...prevMessages, userMessage]);
+    const submitMessage = () => {
+        if (!(inputMessage.trim() === '') || inputFile) {
+            const userPrompt = constructUserPrompt(inputMessage, inputFile);
+            setMessages((prevMessages) => [...prevMessages, userPrompt]);
+            
             setInputFile(null);
-        }
-
-        if (inputMessage.trim() !== '') {
-            const userMessage = {
-                sender: 'user',
-                text: inputMessage,
-                timestamp: new Date().toLocaleTimeString(),
-                type: 'text',
-            };
-            setMessages((prevMessages) => [...prevMessages, userMessage]);
             setInputMessage('');
-        }
 
-
-        // TODO: teste de desenvolvimento de interface
-        const botMessage = {
-            sender: 'bot',
-            text: `ChatGPT está respondendo à sua mensagem: '${inputMessage}'`,
-            timestamp: new Date().toLocaleTimeString(),
-            type: 'text'
-        };
-
-        setTimeout(() => {
-            setMessages((prevMessages) => [...prevMessages, botMessage]);
-        }, 1000);
+            sendPromptForGemini(userPrompt)
+                .then((response) => {
+                    console.log(response);
+                    const botMessage = response;
+                    setMessages((prevMessages) => [...prevMessages, botMessage]);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        } else
+            return;
     };
+
+    function constructUserPrompt(inputMessage, inputFile) {
+        console.log('Enviando mensagem...')
+        return {
+            sender: 'user',
+            type: inputFile ? 'file' : 'text',
+            text: inputMessage.trim() || '',
+            file: inputFile || null,
+            mimetype: inputFile?.type || '',
+        };
+    }
 
     /* TODO: 
     - incluir scroll no input text
@@ -79,7 +70,7 @@ const ChatWorkspace = () => {
                         <img width='40' src={user} alt='Pefil de usuário' />
                     </div>
                 </nav>
-                
+
                 <div className='col-xl-6 col-md-8 col-10'>
                     <div className='chat-container'>
                         <div className='scroll-content chat-messages'>
@@ -121,10 +112,10 @@ const ChatWorkspace = () => {
                                     placeholder='Mensagem... '
                                     value={inputMessage}
                                     onChange={(e) => setInputMessage(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                                    onKeyDown={(e) => e.key === 'Enter' && submitMessage()}
                                 />
                                 <div>
-                                    <label className='send-message-label' onClick={sendMessage}>
+                                    <label className='send-message-label' onClick={submitMessage}>
                                         <img width='24' src={arrowUp} alt='Enviar' />
                                     </label>
                                 </div>
