@@ -8,6 +8,7 @@ import FileMessageBox from '../components/FileMessageBox';
 import { sendPromptForGemini } from '../apiService';
 
 const ChatWorkspace = () => {
+    const [isSending, setIsSending] = useState(false);
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     const [inputFile, setInputFile] = useState(null);
@@ -29,15 +30,15 @@ const ChatWorkspace = () => {
         if (!(inputMessage.trim() === '') || inputFile) {
             const userPrompt = constructUserPrompt(inputMessage, inputFile);
             setMessages((prevMessages) => [...prevMessages, userPrompt]);
-            
+
             setInputFile(null);
             setInputMessage('');
+            setIsSending(true);
 
             sendPromptForGemini(userPrompt)
                 .then((response) => {
-                    console.log(response);
-                    const botMessage = response;
-                    setMessages((prevMessages) => [...prevMessages, botMessage]);
+                    setMessages((prevMessages) => [...prevMessages, constructBotResponse(response)]);
+                    setIsSending(false);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -47,13 +48,20 @@ const ChatWorkspace = () => {
     };
 
     function constructUserPrompt(inputMessage, inputFile) {
-        console.log('Enviando mensagem...')
         return {
             sender: 'user',
             type: inputFile ? 'file' : 'text',
             text: inputMessage.trim() || '',
             file: inputFile || null,
             mimetype: inputFile?.type || '',
+        };
+    }
+
+    function constructBotResponse(response) {
+        return {
+            sender: 'bot',
+            type: 'text',
+            text: response
         };
     }
 
@@ -112,11 +120,14 @@ const ChatWorkspace = () => {
                                     placeholder='Mensagem... '
                                     value={inputMessage}
                                     onChange={(e) => setInputMessage(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && submitMessage()}
+                                    onKeyDown={(e) => isSending ? e.preventDefault() : e.key === 'Enter' && submitMessage()}
                                 />
                                 <div>
-                                    <label className='send-message-label' onClick={submitMessage}>
-                                        <img width='24' src={arrowUp} alt='Enviar' />
+                                    <label className={`send-message-label ${isSending ? 'send-button-disabled' : ''}`}
+                                        onClick={!isSending ? submitMessage : undefined}>
+                                        <img width='24'
+                                            src={arrowUp}
+                                            alt='Enviar' />
                                     </label>
                                 </div>
                             </div>
@@ -124,7 +135,7 @@ const ChatWorkspace = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 
