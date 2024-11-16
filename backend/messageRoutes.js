@@ -16,9 +16,10 @@ const MimeTypes = {
 
 // 1- verifica tipo da mensagem -> se tiver file envia para armazenamento no s3 para obter path
 async function checkMessageType(req, res, next) {
-    const { messageType } = req.body;
+    console.log('Entrou no checkMessageType');
+    const { type } = req.body;
     try {
-        if (messageType.includes(MessageTypes.FILE)) {
+        if (type.includes(MessageTypes.FILE)) {
             // enviar para amzS3 e recuperar path
             const path = "/mock/fake_path";
             req.body.path = path;
@@ -30,10 +31,11 @@ async function checkMessageType(req, res, next) {
 }
 
 function logMessageUser(req, res, next) {
-    const { sender, messageType, messageText, path, mimetype, userCpf } = req.body;
+    console.log('Entrou no logMessageUser');
+    const { sender, type, text, path, mimetype, userCpf } = req.body;
     console.log(req.body)
 
-    dbService.logMessage(sender, messageType, messageText, path, mimetype, userCpf)
+    dbService.logMessage(sender, type, text, path, mimetype, userCpf)
         .then(() => {
             next();
         })
@@ -43,9 +45,10 @@ function logMessageUser(req, res, next) {
 }
 
 router.post('/send-prompt', checkMessageType, logMessageUser, async (req, res) => {
-    const { messageType, messageText, mimetype, userCpf } = req.body;
+    console.log('Entrou no send-prompt');
+    const { type, text, mimetype, userCpf } = req.body;
     try {
-        const resultSendPrompt = await sendPromptByTypeMessage(messageType, messageText, mimetype, userCpf);
+        const resultSendPrompt = await sendPromptByTypeMessage(type, text, mimetype, userCpf);
         console.log('TESTE: ' + resultSendPrompt);
         res.send(resultSendPrompt);
     } catch (error) {
@@ -53,10 +56,10 @@ router.post('/send-prompt', checkMessageType, logMessageUser, async (req, res) =
     }
 });
 
-async function sendPromptByTypeMessage(messageType, prompt, mimetype, userCpf) {
+async function sendPromptByTypeMessage(type, prompt, mimetype, userCpf) {
     let response = '';
     try {
-        if (messageType == MessageTypes.FILE)
+        if (type == MessageTypes.FILE)
             response = await geminiService.getResponseByText(prompt);
         else if (mimetype == MimeTypes.PDF)
             response = await geminiService.getResponseByDocument(prompt);
