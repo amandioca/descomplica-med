@@ -32,10 +32,10 @@ async function checkMessageType(req, res, next) {
 
 function logMessageUser(req, res, next) {
     console.log('Entrou no logMessageUser');
-    const { sender, type, text, path, mimetype, userCpf } = req.body;
+    const { sender, type, text, path, mimetype } = req.body;
     console.log(req.body)
 
-    dbService.logMessage(sender, type, text, path, mimetype, userCpf)
+    dbService.logMessage(sender, type, text, path, mimetype)
         .then(() => {
             next();
         })
@@ -46,9 +46,9 @@ function logMessageUser(req, res, next) {
 
 router.post('/send-prompt', checkMessageType, logMessageUser, async (req, res) => {
     console.log('Entrou no send-prompt');
-    const { type, text, mimetype, userCpf } = req.body;
+    const { type, text, mimetype } = req.body;
     try {
-        const resultSendPrompt = await sendPromptByTypeMessage(type, text, mimetype, userCpf);
+        const resultSendPrompt = await sendPromptByTypeMessage(type, text, mimetype);
         console.log('TESTE: ' + resultSendPrompt);
         res.send(resultSendPrompt);
     } catch (error) {
@@ -56,7 +56,7 @@ router.post('/send-prompt', checkMessageType, logMessageUser, async (req, res) =
     }
 });
 
-async function sendPromptByTypeMessage(type, prompt, mimetype, userCpf) {
+async function sendPromptByTypeMessage(type, prompt, mimetype) {
     let response = '';
     try {
         if (type == MessageTypes.FILE)
@@ -66,7 +66,7 @@ async function sendPromptByTypeMessage(type, prompt, mimetype, userCpf) {
         else
             response = await geminiService.getResponseByImage(prompt);
 
-        await dbService.logMessage('bot', 'text', response, null, null, userCpf);
+        await dbService.logMessage('bot', 'text', response, null, null);
         return response;
     } catch (error) {
         res.status(500).json({ message: `Generic error in sendPromptByTypeMessage: ${error}` });

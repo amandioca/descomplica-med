@@ -62,7 +62,9 @@ async function getChatHistoryByUser(cpf) {
     return status;
 }
 
-async function logMessage(sender, messageType, messageText, filePath, mimetype, userCpf) {
+async function logMessage(sender, messageType, messageText, filePath, mimetype) {
+    // TODO: remover userCpf do logMessage
+    const userCpf = '12345678900';
     try {
         const result = await client.query(
             'INSERT INTO chat_history (sender, message_type, message_text, file_path, mimetype, user_cpf) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
