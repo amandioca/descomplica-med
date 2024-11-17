@@ -58,7 +58,7 @@ async function sendPromptByTypeMessage(type, prompt, mimetype, base64, file, key
     try {
         if (type == MessageTypes.TEXT)
             response = await geminiService.getResponseByText(prompt);
-        else if (mimetype == MimeTypes.JPG)
+        else if (type === MessageTypes.FILE)
             response = await geminiService.getResponseByDocument(base64, file, key);
 
         console.log('Response:', response);
