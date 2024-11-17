@@ -17,25 +17,18 @@ const model = genAI.getGenerativeModel({
 async function getResponseByText(prompt) {
     const result = await model.generateContent(prompt);
     return result.response.text();
-    // return 'Message mock. generateContent status 503';
 }
 
-async function getResponseByFileAndText(base64WithHeader, file, key) {
+async function getResponseByFileAndText(base64WithHeader, key, mimetype) {
     try {
-        console.log('Entrou no getResponseByDocument');
-
         const base64Data = base64WithHeader.split(',')[1];
-
         const tempFilePath = `./mock/${key}`;
         fs.writeFileSync(tempFilePath, Buffer.from(base64Data, 'base64'));
         
         const uploadResponse = await fileManager.uploadFile(tempFilePath, {
-            mimeType: 'image/jpeg',
+            mimeType: mimetype,
             displayName: key,
         });
-        
-        console.log('Upload response: ' + uploadResponse);
-        console.log('Upload response uri: ' + uploadResponse.file.uri);
 
         const result = await model.generateContent([
             {
@@ -48,8 +41,6 @@ async function getResponseByFileAndText(base64WithHeader, file, key) {
                 text: 'O que é essa imagem?',
             },
         ]);
-
-        console.log('Result: ' + result.response.text());
         return result.response.text();
     } catch (error) {
         return `Generic error in getResponseByDocument: ${error}`;

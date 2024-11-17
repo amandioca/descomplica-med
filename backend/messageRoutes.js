@@ -44,22 +44,22 @@ function logMessageUser(req, res, next) {
 
 router.post('/send-prompt', checkMessageType, logMessageUser, async (req, res) => {
     console.log('Entrou no send-prompt');
-    const { type, text, mimetype, base64, file, path } = req.body;
+    const { type, text, mimetype, base64, path } = req.body;
     try {
-        const resultSendPrompt = await sendPromptByTypeMessage(type, text, mimetype, base64, file, path);
+        const resultSendPrompt = await sendPromptByTypeMessage(type, text, mimetype, base64, path);
         res.send(resultSendPrompt);
     } catch (error) {
         res.status(500).json({ message: `Generic error: ${error}` });
     }
 });
 
-async function sendPromptByTypeMessage(type, prompt, mimetype, base64, file, key) {
+async function sendPromptByTypeMessage(type, prompt, mimetype, base64, key) {
     let response = '';
     try {
         if (type == MessageTypes.TEXT)
             response = await geminiService.getResponseByText(prompt);
         else if (type === MessageTypes.FILE)
-            response = await geminiService.getResponseByFileAndText(base64, file, key);
+            response = await geminiService.getResponseByFileAndText(base64, key, mimetype);
 
         console.log('Response:', response);
         await dbService.logMessage('bot', 'text', response, null, null);
