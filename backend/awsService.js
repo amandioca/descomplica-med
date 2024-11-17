@@ -28,9 +28,15 @@ async function uploadFileToS3(file, mimetype) {
         await s3Client.send(new PutObjectCommand(params));
         return key;
     } catch (error) {
-        console.error("Error uploading file:", error);
+        console.error('Error uploading file:', error);
     }
 }
+
+function generateHashMD5() {
+    const hash = crypto.createHash('md5').update(Date.now().toString()).digest('hex');
+    return hash;
+}
+
 
 function generateHashMD5() {
     const hash = crypto.createHash('md5').update(Date.now().toString()).digest('hex');
@@ -49,8 +55,13 @@ async function generateTempUrl(key) {
         console.error('Signed URL:', signedUrl);
         return signedUrl;
     } catch (error) {
-        console.error("Error generating signed URL", error);
+        console.error('Error generating signed URL', error);
     }
+}
+
+function generateHash(){
+    const hash = crypto.createHash('md5').update(Date.now().toString()).digest('hex');
+    return hash;
 }
 
 module.exports = {

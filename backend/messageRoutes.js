@@ -24,6 +24,7 @@ async function checkMessageType(req, res, next) {
             req.body.path = key;
         }
         next();
+        next();
     } catch (error) {
         res.status(500).json({ message: `Generic error in checkMessageType: ${error}` });
     }
@@ -62,8 +63,6 @@ async function sendPromptByTypeMessage(type, prompt, mimetype, base64, file, key
             response = await geminiService.getResponseByText(prompt);
         else if (mimetype == MimeTypes.JPG)
             response = await geminiService.getResponseByDocument(base64, file, key);
-        else
-            response = await geminiService.getResponseByImage(prompt);
 
         console.log('Response:', response);
         await dbService.logMessage('bot', 'text', response, null, null);
