@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router();
 const dbService = require('./dbService');
 const geminiService = require('./geminiService');
+const { uploadFileToS3 } = require('./awsService');
 
 const MessageTypes = {
     TEXT: 'text',
@@ -14,15 +15,13 @@ const MimeTypes = {
     JPG: 'image/jpeg'
 };
 
-// 1- verifica tipo da mensagem -> se tiver file envia para armazenamento no s3 para obter path
 async function checkMessageType(req, res, next) {
     console.log('Entrou no checkMessageType');
-    const { type } = req.body;
+    const { type, file, mimetype } = req.body;
     try {
         if (type.includes(MessageTypes.FILE)) {
-            // enviar para amzS3 e recuperar path
-            const path = "/mock/fake_path";
-            req.body.path = path;
+            const key = await uploadFileToS3(file, mimetype);
+            req.body.path = key;
         }
         next();
     } catch (error) {
@@ -46,9 +45,9 @@ function logMessageUser(req, res, next) {
 
 router.post('/send-prompt', checkMessageType, logMessageUser, async (req, res) => {
     console.log('Entrou no send-prompt');
-    const { type, text, mimetype } = req.body;
+    const { type, text, mimetype, base64, file, path } = req.body;
     try {
-        const resultSendPrompt = await sendPromptByTypeMessage(type, text, mimetype);
+        const resultSendPrompt = await sendPromptByTypeMessage(type, text, mimetype, base64, file, path);
         console.log('TESTE: ' + resultSendPrompt);
         res.send(resultSendPrompt);
     } catch (error) {
@@ -56,13 +55,13 @@ router.post('/send-prompt', checkMessageType, logMessageUser, async (req, res) =
     }
 });
 
-async function sendPromptByTypeMessage(type, prompt, mimetype) {
+async function sendPromptByTypeMessage(type, prompt, mimetype, base64, file, key) {
     let response = '';
     try {
         if (type == MessageTypes.TEXT)
             response = await geminiService.getResponseByText(prompt);
-        else if (mimetype == MimeTypes.PDF)
-            response = await geminiService.getResponseByDocument(prompt);
+        else if (mimetype == MimeTypes.JPG)
+            response = await geminiService.getResponseByDocument(base64, file, key);
         else
             response = await geminiService.getResponseByImage(prompt);
 
@@ -70,7 +69,7 @@ async function sendPromptByTypeMessage(type, prompt, mimetype) {
         await dbService.logMessage('bot', 'text', response, null, null);
         return response;
     } catch (error) {
-        res.status(500).json({ message: `Generic error in sendPromptByTypeMessage: ${error}` });
+        return `Generic error in sendPromptByTypeMessage: ${error}`;
     }
 }
 

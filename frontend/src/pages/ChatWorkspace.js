@@ -12,6 +12,7 @@ const ChatWorkspace = () => {
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     const [inputFile, setInputFile] = useState(null);
+    const [base64File, setBase64File] = useState('');
     const messagesEndRef = useRef(null);
 
     const clearInputFile = () => {
@@ -29,6 +30,10 @@ const ChatWorkspace = () => {
     const submitMessage = () => {
         if (!(inputMessage.trim() === '') || inputFile) {
             const userPrompt = constructUserPrompt(inputMessage, inputFile);
+
+            console.log(userPrompt)
+            console.log(userPrompt.mimetype)
+
             setMessages((prevMessages) => [...prevMessages, userPrompt]);
 
             setInputFile(null);
@@ -53,6 +58,7 @@ const ChatWorkspace = () => {
             type: inputFile ? 'file' : 'text',
             text: inputMessage.trim() || '',
             file: inputFile || null,
+            base64: base64File,
             mimetype: inputFile?.type || '',
         };
     }
@@ -63,6 +69,23 @@ const ChatWorkspace = () => {
             type: 'text',
             text: response
         };
+    }
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setInputFile(file);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setBase64File(reader.result);
+            console.log("Arquivo em Base64:", reader.result);
+        };
+        
+        reader.readAsDataURL(file);
+
+        e.target.value = null;
     }
 
     /* TODO: 
@@ -91,7 +114,7 @@ const ChatWorkspace = () => {
                                     )}
                                     {message.type === 'file' && (
                                         <div>
-                                            <FileMessageBox file={message.image} />
+                                            <FileMessageBox file={message.file} />
                                         </div>
                                     )}
                                 </div>
@@ -110,10 +133,7 @@ const ChatWorkspace = () => {
                                     <input
                                         type='file'
                                         accept='.pdf, .png, .jpg'
-                                        onChange={(e) => {
-                                            setInputFile(e.target.files[0])
-                                            e.target.value = null;
-                                        }} />
+                                        onChange={handleFileChange} />
                                 </label>
                                 <input
                                     type='text'

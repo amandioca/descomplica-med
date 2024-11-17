@@ -13,9 +13,9 @@ const s3Client = new S3Client({
 });
 
 async function uploadFileToS3(file, mimetype) {
-    const filePath = path.join(__dirname, './mock/file-mock.pdf');
+    const filePath = path.join(__dirname, './mock/file-mock.jpg');
     const fileContent = fs.readFileSync(filePath);
-    const key = `test/${generateHashMD5()}.pdf`;
+    const key = `${generateHashMD5()}.jpeg`;
 
     const params = {
         Bucket: process.env.S3_BUCKET_NAME,
@@ -34,8 +34,9 @@ async function uploadFileToS3(file, mimetype) {
 
 function generateHashMD5() {
     const hash = crypto.createHash('md5').update(Date.now().toString()).digest('hex');
-    return hash; 
-  }
+    return hash;
+}
+
 
 async function generateTempUrl(key) {
     const command = new GetObjectCommand({

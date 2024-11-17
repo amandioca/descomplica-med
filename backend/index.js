@@ -7,7 +7,7 @@ const gemini = require('./geminiService');
 const userRoutes = require('./userRoutes');
 const messageRoutes = require('./messageRoutes');
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 app.use(cors());
 
