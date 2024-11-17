@@ -31,7 +31,7 @@ function logMessageUser(req, res, next) {
     console.log('Entrou no logMessageUser');
     const { sender, type, text, path, mimetype } = req.body;
 
-    dbService.logMessage(sender, type, text, path, mimetype)
+    dbService.logMessage(sender, type, text, path ? path : '', mimetype)
         .then(() => {
             next();
         })
@@ -62,7 +62,7 @@ async function sendPromptByTypeMessage(type, prompt, mimetype, base64, key) {
         }
 
         console.log('Response:', response);
-        await dbService.logMessage('bot', 'text', response, null, null);
+        await dbService.logMessage('bot', 'text', response, '', '');
         return response;
     } catch (error) {
         return `Generic error in sendPromptByTypeMessage: ${error}`;
