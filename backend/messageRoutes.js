@@ -59,7 +59,7 @@ async function sendPromptByTypeMessage(type, prompt, mimetype, base64, file, key
         if (type == MessageTypes.TEXT)
             response = await geminiService.getResponseByText(prompt);
         else if (type === MessageTypes.FILE)
-            response = await geminiService.getResponseByDocument(base64, file, key);
+            response = await geminiService.getResponseByFileAndText(base64, file, key);
 
         console.log('Response:', response);
         await dbService.logMessage('bot', 'text', response, null, null);

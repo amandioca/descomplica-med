@@ -20,7 +20,7 @@ async function getResponseByText(prompt) {
     // return 'Message mock. generateContent status 503';
 }
 
-async function getResponseByDocument(base64WithHeader, file, key) {
+async function getResponseByFileAndText(base64WithHeader, file, key) {
     try {
         console.log('Entrou no getResponseByDocument');
 
@@ -56,16 +56,7 @@ async function getResponseByDocument(base64WithHeader, file, key) {
     }
 }
 
-async function getResponseByImage(prompt) {
-    const status = {
-        code: 501,
-        message: 'Not Implemented'
-    };
-    return status;
-}
-
 module.exports = {
     getResponseByText,
-    getResponseByImage,
-    getResponseByDocument,
+    getResponseByFileAndText,
 }
