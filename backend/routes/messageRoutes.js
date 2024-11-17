@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router();
 const dbService = require('../services/dbService');
 const geminiService = require('../services/geminiService');
+const { saveFileToTemp, generateFileName, deleteTempFolder } = require('../utils/fileUtils');
 const { uploadFileToS3 } = require('../services/awsService');
 
 const MessageTypes = {
@@ -9,18 +10,15 @@ const MessageTypes = {
     FILE: 'file'
 };
 
-const MimeTypes = {
-    PDF: 'application/pdf',
-    PNG: 'image/png',
-    JPG: 'image/jpeg'
-};
-
 async function checkMessageType(req, res, next) {
     console.log('Entrou no checkMessageType');
-    const { type, file, mimetype } = req.body;
+    const { type, mimetype, base64 } = req.body;
     try {
         if (type.includes(MessageTypes.FILE)) {
-            const key = await uploadFileToS3(file, mimetype);
+            const fileName = generateFileName(mimetype);            
+            await saveFileToTemp(fileName, base64);
+
+            const key = await uploadFileToS3(fileName, mimetype);
             req.body.path = key;
         }
         next();
@@ -58,8 +56,10 @@ async function sendPromptByTypeMessage(type, prompt, mimetype, base64, key) {
     try {
         if (type == MessageTypes.TEXT)
             response = await geminiService.getResponseByText(prompt);
-        else if (type === MessageTypes.FILE)
+        else if (type === MessageTypes.FILE){
             response = await geminiService.getResponseByFileAndText(base64, key, mimetype);
+            deleteTempFolder();
+        }
 
         console.log('Response:', response);
         await dbService.logMessage('bot', 'text', response, null, null);

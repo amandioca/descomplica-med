@@ -22,9 +22,9 @@ async function getResponseByText(prompt) {
 async function getResponseByFileAndText(base64WithHeader, key, mimetype) {
     try {
         const base64Data = base64WithHeader.split(',')[1];
-        const tempFilePath = `./mock/${key}`;
-        fs.writeFileSync(tempFilePath, Buffer.from(base64Data, 'base64'));
+        const tempFilePath = `./.temp/${key}`;
         
+
         const uploadResponse = await fileManager.uploadFile(tempFilePath, {
             mimeType: mimetype,
             displayName: key,

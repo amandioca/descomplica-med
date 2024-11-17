@@ -12,10 +12,12 @@ const s3Client = new S3Client({
     },
 });
 
-async function uploadFileToS3(file, mimetype) {
-    const filePath = path.join(__dirname, '../mock/file-mock.jpg');
+async function uploadFileToS3(fileName, mimetype) {
+    const filePath = path.join(__dirname, `../.temp/${fileName}`);
+    console.log('File path:', filePath);
     const fileContent = fs.readFileSync(filePath);
-    const key = `${generateHashMD5()}.jpeg`;
+    console.log('File content:', fileContent);
+    const key = fileName;
 
     const params = {
         Bucket: process.env.S3_BUCKET_NAME,
