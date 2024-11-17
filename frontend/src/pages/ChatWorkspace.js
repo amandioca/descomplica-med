@@ -32,9 +32,6 @@ const ChatWorkspace = () => {
         if (!(inputMessage.trim() === '') || inputFile) {
             const userPrompt = constructUserPrompt(inputMessage, inputFile);
 
-            console.log(userPrompt)
-            console.log(userPrompt.mimetype)
-
             setMessages((prevMessages) => [...prevMessages, userPrompt]);
 
             setInputFile(null);

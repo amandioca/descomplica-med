@@ -11,7 +11,7 @@ const MessageTypes = {
 };
 
 async function checkMessageType(req, res, next) {
-    console.log('Entrou no checkMessageType');
+    console.log('checkMessageType process started');
     const { type, mimetype, base64 } = req.body;
     try {
         if (type.includes(MessageTypes.FILE)) {
@@ -28,7 +28,7 @@ async function checkMessageType(req, res, next) {
 }
 
 function logMessageUser(req, res, next) {
-    console.log('Entrou no logMessageUser');
+    console.log('logMessageUser process started');
     const { sender, type, text, path, mimetype } = req.body;
 
     dbService.logMessage(sender, type, text, path ? path : '', mimetype)
@@ -41,27 +41,26 @@ function logMessageUser(req, res, next) {
 }
 
 router.post('/send-prompt', checkMessageType, logMessageUser, async (req, res) => {
-    console.log('Entrou no send-prompt');
-    const { type, text, mimetype, base64, path } = req.body;
+    console.log('sendPrompt process started');
+    const { type, text, mimetype, path } = req.body;
     try {
-        const resultSendPrompt = await sendPromptByTypeMessage(type, text, mimetype, base64, path);
+        const resultSendPrompt = await sendPromptByTypeMessage(type, text, mimetype, path);
         res.send(resultSendPrompt);
     } catch (error) {
         res.status(500).json({ message: `Generic error: ${error}` });
     }
 });
 
-async function sendPromptByTypeMessage(type, prompt, mimetype, base64, key) {
+async function sendPromptByTypeMessage(type, prompt, mimetype, key) {
+    console.log('sendPromptByTypeMessage process started');
     let response = '';
     try {
         if (type == MessageTypes.TEXT)
             response = await geminiService.getResponseByText(prompt);
         else if (type === MessageTypes.FILE){
-            response = await geminiService.getResponseByFileAndText(base64, key, mimetype);
+            response = await geminiService.getResponseByFileAndText(key, mimetype);
             deleteTempFolder();
         }
-
-        console.log('Response:', response);
         await dbService.logMessage('bot', 'text', response, '', '');
         return response;
     } catch (error) {

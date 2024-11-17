@@ -15,16 +15,16 @@ const model = genAI.getGenerativeModel({
 });
 
 async function getResponseByText(prompt) {
+    console.log('getResponseByText process started');
     const result = await model.generateContent(prompt);
     return result.response.text();
 }
 
-async function getResponseByFileAndText(base64WithHeader, key, mimetype) {
+async function getResponseByFileAndText(key, mimetype) {
+    console.log('getResponseByFileAndText process started');
     try {
-        const base64Data = base64WithHeader.split(',')[1];
         const tempFilePath = `./.temp/${key}`;
         
-
         const uploadResponse = await fileManager.uploadFile(tempFilePath, {
             mimeType: mimetype,
             displayName: key,
