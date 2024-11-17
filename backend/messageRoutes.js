@@ -24,7 +24,6 @@ async function checkMessageType(req, res, next) {
             req.body.path = key;
         }
         next();
-        next();
     } catch (error) {
         res.status(500).json({ message: `Generic error in checkMessageType: ${error}` });
     }
@@ -33,7 +32,6 @@ async function checkMessageType(req, res, next) {
 function logMessageUser(req, res, next) {
     console.log('Entrou no logMessageUser');
     const { sender, type, text, path, mimetype } = req.body;
-    console.log(req.body)
 
     dbService.logMessage(sender, type, text, path, mimetype)
         .then(() => {
@@ -49,7 +47,6 @@ router.post('/send-prompt', checkMessageType, logMessageUser, async (req, res) =
     const { type, text, mimetype, base64, file, path } = req.body;
     try {
         const resultSendPrompt = await sendPromptByTypeMessage(type, text, mimetype, base64, file, path);
-        console.log('TESTE: ' + resultSendPrompt);
         res.send(resultSendPrompt);
     } catch (error) {
         res.status(500).json({ message: `Generic error: ${error}` });
