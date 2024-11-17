@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router();
-const dbService = require('./dbService');
-const geminiService = require('./geminiService');
-const { uploadFileToS3 } = require('./awsService');
+const dbService = require('../services/dbService');
+const geminiService = require('../services/geminiService');
+const { uploadFileToS3 } = require('../services/awsService');
 
 const MessageTypes = {
     TEXT: 'text',

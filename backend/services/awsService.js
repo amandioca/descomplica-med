@@ -13,7 +13,7 @@ const s3Client = new S3Client({
 });
 
 async function uploadFileToS3(file, mimetype) {
-    const filePath = path.join(__dirname, './mock/file-mock.jpg');
+    const filePath = path.join(__dirname, '../mock/file-mock.jpg');
     const fileContent = fs.readFileSync(filePath);
     const key = `${generateHashMD5()}.jpeg`;
 

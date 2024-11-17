@@ -3,9 +3,9 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const gemini = require('./geminiService');
-const userRoutes = require('./userRoutes');
-const messageRoutes = require('./messageRoutes');
+const gemini = require('./services/geminiService');
+const userRoutes = require('./routes/userRoutes');
+const messageRoutes = require('./routes/messageRoutes');
 const app = express();
 app.use(express.json({ limit: '10mb' }));
 
