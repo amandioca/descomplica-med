@@ -37,13 +37,6 @@ function generateHashMD5() {
     return hash;
 }
 
-
-function generateHashMD5() {
-    const hash = crypto.createHash('md5').update(Date.now().toString()).digest('hex');
-    return hash;
-}
-
-
 async function generateTempUrl(key) {
     const command = new GetObjectCommand({
         Bucket: process.env.S3_BUCKET_NAME,
