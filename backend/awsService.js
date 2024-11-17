@@ -1,5 +1,6 @@
 const { S3Client, GetObjectCommand, PutObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const crypto = require('crypto');
 const fs = require("fs");
 const path = require("path");
 
@@ -12,9 +13,9 @@ const s3Client = new S3Client({
 });
 
 async function uploadFileToS3(file, mimetype) {
-    const filePath = path.join(__dirname, './mock/file-mock.png');
+    const filePath = path.join(__dirname, './mock/file-mock.pdf');
     const fileContent = fs.readFileSync(filePath);
-    const key = 'test/FILE-TEST-AWSv3.png';
+    const key = `test/${generateHashMD5()}.pdf`;
 
     const params = {
         Bucket: process.env.S3_BUCKET_NAME,
@@ -30,6 +31,11 @@ async function uploadFileToS3(file, mimetype) {
         console.error("Error uploading file:", error);
     }
 }
+
+function generateHashMD5() {
+    const hash = crypto.createHash('md5').update(Date.now().toString()).digest('hex');
+    return hash; 
+  }
 
 async function generateTempUrl(key) {
     const command = new GetObjectCommand({
@@ -48,4 +54,5 @@ async function generateTempUrl(key) {
 
 module.exports = {
     uploadFileToS3,
+    generateTempUrl,
 };
