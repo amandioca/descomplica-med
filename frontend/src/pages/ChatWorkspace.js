@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import '../styles/ChatWorkspace.css';
 import { AuthNavbar } from '../components/Navbar';
+import ReactMarkdown from 'react-markdown';
 import paperclip from '../assets/svgs/paperclip.svg'
 import arrowUp from '../assets/svgs/arrow-up.svg'
 import user from '../assets/svgs/user.svg'
@@ -110,7 +111,9 @@ const ChatWorkspace = () => {
                                     key={index}
                                     className={`chat-message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}>
                                     {message.type === 'text' && (
-                                        <span className='message-text'>{message.text}</span>
+                                        <span className='message-text'>
+                                            <ReactMarkdown>{message.text}</ReactMarkdown>
+                                        </span>
                                     )}
                                     {message.type === 'file' && (
                                         <div>
