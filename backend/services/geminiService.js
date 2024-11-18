@@ -46,7 +46,8 @@ async function getResponseByFileAndText(key, mimetype) {
                 em seguida o tópico de Cuidados Paleativos a serem tomadas e por fim, a uma breve 
                 explanação do resultado do exame. Diagrame a resposta em markdown para ficar 
                 visualmente mais organizado. Seja claro e objetivo e evite termos técnicos.
-                Não dê diagnósticos, apenas informações.`,
+                Não dê diagnósticos, apenas informações. Humanize ao máximo a resposta e seja 
+                empático.`,
             },
         ]);
         return result.response.text();
