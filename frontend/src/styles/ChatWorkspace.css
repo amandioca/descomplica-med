@@ -7,7 +7,7 @@
     flex-direction: column;
 }
 
-.send-button-disabled{
+.send-button-disabled {
     opacity: 0.5;
     pointer-events: none;
     cursor: not-allowed;
@@ -28,16 +28,26 @@
     justify-content: flex-end;
 }
 
+.user-message span {
+    justify-content: flex-end;
+
+}
+
 .message-text {
     display: block;
     text-align: right;
-    background: var(--color-gray-medium);
     color: var(--color-white);
     padding: 10px 20px;
     border-radius: 25px;
     max-width: 70%;
     word-wrap: break-word;
     display: inline-block;
+    margin-bottom: 0.5em;
+    background: var(--color-gray-medium);
+}
+
+p {
+    margin-bottom: 0.5em;
 }
 
 .bot-message {
@@ -50,6 +60,7 @@
     max-width: 100%;
     word-wrap: break-word;
     display: inline-block;
+    background: none;
 }
 
 .chat-input {
