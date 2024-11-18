@@ -4,7 +4,7 @@ import { AuthNavbar } from '../components/Navbar';
 import ReactMarkdown from 'react-markdown';
 import paperclip from '../assets/svgs/paperclip.svg'
 import arrowUp from '../assets/svgs/arrow-up.svg'
-import user from '../assets/svgs/user.svg'
+import character from '../assets/images/character.jpeg'
 import FileMessageBox from '../components/FileMessageBox';
 import { sendPromptForGemini } from '../apiService';
 
@@ -80,7 +80,7 @@ const ChatWorkspace = () => {
             setBase64File(reader.result);
             console.log("Arquivo em Base64:", reader.result);
         };
-        
+
         reader.readAsDataURL(file);
 
         e.target.value = null;
@@ -105,9 +105,15 @@ const ChatWorkspace = () => {
                                     key={index}
                                     className={`chat-message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}>
                                     {message.type === 'text' && (
-                                        <span className='message-text'>
-                                            <ReactMarkdown>{message.text}</ReactMarkdown>
-                                        </span>
+                                        <>
+                                            {message.sender === 'bot' && (
+                                                <img style={{marginTop: 10, borderRadius: 50}} src={character} alt='ícone de usuário' height='32'></img>
+                                            )}
+
+                                            <span className='message-text'>
+                                                <ReactMarkdown>{message.text}</ReactMarkdown>
+                                            </span>
+                                        </>
                                     )}
                                     {message.type === 'file' && (
                                         <div>
