@@ -15,21 +15,3 @@ CREATE TABLE IF NOT EXISTS chat_history (
     user_cpf CHAR(11),
     FOREIGN KEY (user_cpf) REFERENCES users (cpf)
 );
-
-INSERT INTO chat_history (
-    sender, 
-    message_text, 
-    file_path, 
-    mimetype,
-    message_type,
-    user_cpf
-) VALUES (
-    'user',
-    '',
-    '/path/fake',
-    'application/pdf',
-    'file',
-    '33333333333'
-);
-
-SELECT * FROM chat_history;

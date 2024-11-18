@@ -20,6 +20,7 @@ client.connect()
     .catch(err => console.error('Database connection error: ', err))
 
 async function getUsers() {
+    console.log('getUsers process started');
     try {
         const result = await client.query('SELECT * FROM users');
         return result.rows;
@@ -30,8 +31,12 @@ async function getUsers() {
 }
 
 async function getUserByCpf(cpf) {
+    console.log('getUserByCpf process started');
     try {
-        const result = await client.query('SELECT * FROM users WHERE cpf = $1', [cpf]);
+        const result = await client.query(
+            'SELECT * FROM users WHERE cpf = $1',
+            [cpf]
+        );
         return result.rows;
     } catch (error) {
         console.error('Error fetching user by CPF: ', error);
@@ -40,8 +45,11 @@ async function getUserByCpf(cpf) {
 }
 
 async function createUser(cpf, fullName, password) {
+    console.log('createUser process started');
     try {
-        const result = await client.query('INSERT INTO users (cpf, full_name, password) VALUES ($1, $2, $3) RETURNING *', [cpf, fullName, password])
+        const result = await client.query('INSERT INTO users (cpf, full_name, password) VALUES ($1, $2, $3) RETURNING *', [
+            cpf, fullName, password]
+        )
         return result.rows[0];
     } catch (error) {
         console.error('Error creating user in database: ', error);
@@ -50,6 +58,7 @@ async function createUser(cpf, fullName, password) {
 }
 
 async function getChatHistoryByUser(cpf) {
+    console.log('getChatHistoryByUser process started');
     const status = {
         code: 501,
         message: 'Not Implemented'
@@ -57,27 +66,25 @@ async function getChatHistoryByUser(cpf) {
     return status;
 }
 
-async function logMessage(message) {
-    const status = {
-        code: 501,
-        message: 'Not Implemented'
-    };
-    return status;
+async function logMessage(sender, messageType, messageText, filePath, mimetype) {
+    console.log('logMessage process started');
+    // TODO: remover userCpf do logMessage
+    const userCpf = '12345678900';
+    try {
+        const result = await client.query(
+            'INSERT INTO chat_history (sender, message_type, message_text, file_path, mimetype, user_cpf) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+            [sender, messageType, messageText, filePath, mimetype, userCpf]
+        )
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error logging message in database: ', error);
+        throw error;
+    }
 }
-
-const messageTemplate = {
-    sender: null,
-    messageType: "",
-    messageText: "",
-    filePath: "",
-    mimetype: "",
-    userCpf: ""
-};
 
 module.exports = {
     getUsers,
     getUserByCpf,
     createUser,
-    logMessage,
-    messageTemplate
+    logMessage
 }
