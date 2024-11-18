@@ -1,5 +1,9 @@
+body {
+    overflow: hidden;
+}
+
 .chat-container {
-    height: calc(100dvh - 146px);
+    height: calc(100dvh - 126px);
     padding: auto;
     margin: 0 auto;
     overflow: hidden;

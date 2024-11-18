@@ -94,10 +94,7 @@ const ChatWorkspace = () => {
             <AuthNavbar />
             <div style={{ padding: '10px 15px' }}>
 
-                <nav style={{ height: 60 }} >
-                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <img width='40' src={user} alt='Pefil de usuário' />
-                    </div>
+                <nav style={{ height: 40 }}>
                 </nav>
 
                 <div className='col-xl-5 col-md-7 col-9'>
