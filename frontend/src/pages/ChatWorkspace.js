@@ -100,7 +100,7 @@ const ChatWorkspace = () => {
                     </div>
                 </nav>
 
-                <div className='col-xl-6 col-md-8 col-10'>
+                <div className='col-xl-5 col-md-7 col-9'>
                     <div className='chat-container'>
                         <div className='scroll-content chat-messages'>
                             {messages.map((message, index) => (
