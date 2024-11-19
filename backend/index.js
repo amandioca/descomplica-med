@@ -11,12 +11,12 @@ app.use(express.json({ limit: '10mb' }));
 
 app.use(cors());
 
-app.use('/users', userRoutes);
-app.use('/messages', messageRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/messages', messageRoutes);
 
 const PORT = 3000;
 
-app.get('/hello-world', (req, res) => {
+app.get('/api/hello-world', (req, res) => {
     res.send({ message: 'hello world!' })
 });
 
@@ -24,7 +24,7 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`)
 });
 
-app.get('/response-gemini', async (req, res) => {
+app.get('/api/response-gemini', async (req, res) => {
     const { userMessage } = req.body;
     try {
         let result = '';
