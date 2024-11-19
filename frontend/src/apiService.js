@@ -5,7 +5,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 const request = async (url, method = 'GET', body = null, headers = {}) => {
     const config = {
         method,
-        url: `${API_URL}${url}`,
+        url: `${API_URL}/api${url}`,
         headers: {
             'Content-Type': 'application/json',
             ...headers,
