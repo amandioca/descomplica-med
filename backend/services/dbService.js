@@ -20,6 +20,7 @@ client.connect()
     .catch(err => console.error('Database connection error: ', err))
 
 async function getUsers() {
+    console.log('getUsers process started');
     try {
         const result = await client.query('SELECT * FROM users');
         return result.rows;
@@ -30,6 +31,7 @@ async function getUsers() {
 }
 
 async function getUserByCpf(cpf) {
+    console.log('getUserByCpf process started');
     try {
         const result = await client.query(
             'SELECT * FROM users WHERE cpf = $1',
@@ -43,6 +45,7 @@ async function getUserByCpf(cpf) {
 }
 
 async function createUser(cpf, fullName, password) {
+    console.log('createUser process started');
     try {
         const result = await client.query('INSERT INTO users (cpf, full_name, password) VALUES ($1, $2, $3) RETURNING *', [
             cpf, fullName, password]
@@ -55,6 +58,7 @@ async function createUser(cpf, fullName, password) {
 }
 
 async function getChatHistoryByUser(cpf) {
+    console.log('getChatHistoryByUser process started');
     const status = {
         code: 501,
         message: 'Not Implemented'
@@ -62,7 +66,10 @@ async function getChatHistoryByUser(cpf) {
     return status;
 }
 
-async function logMessage(sender, messageType, messageText, filePath, mimetype, userCpf) {
+async function logMessage(sender, messageType, messageText, filePath, mimetype) {
+    console.log('logMessage process started');
+    // TODO: remover userCpf do logMessage
+    const userCpf = '12345678900';
     try {
         const result = await client.query(
             'INSERT INTO chat_history (sender, message_type, message_text, file_path, mimetype, user_cpf) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',

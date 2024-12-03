@@ -1,19 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button } from 'bootstrap';
 import '../styles/ChatWorkspace.css';
 import { AuthNavbar } from '../components/Navbar';
+import ReactMarkdown from 'react-markdown';
 import paperclip from '../assets/svgs/paperclip.svg'
 import arrowUp from '../assets/svgs/arrow-up.svg'
 import user from '../assets/svgs/user.svg'
 import FileMessageBox from '../components/FileMessageBox';
+import { sendPromptForGemini } from '../apiService';
 
 const ChatWorkspace = () => {
+    const [isSending, setIsSending] = useState(false);
     const [messages, setMessages] = useState([]);
     const [inputMessage, setInputMessage] = useState('');
     const [inputFile, setInputFile] = useState(null);
+    const [base64File, setBase64File] = useState('');
     const messagesEndRef = useRef(null);
-
-    const username = 'Vinicius Bizelli';
 
     const clearInputFile = () => {
         setInputFile(null)
@@ -27,44 +28,63 @@ const ChatWorkspace = () => {
         scrollToBottom();
     }, [messages]);
 
-    const sendMessage = async () => {
-        if (inputMessage.trim() === '' && !inputFile) return;
+    const submitMessage = () => {
+        if (!(inputMessage.trim() === '') || inputFile) {
+            const userPrompt = constructUserPrompt(inputMessage, inputFile);
 
-        if (inputFile) {
-            const userMessage = {
-                sender: 'user',
-                image: inputFile,
-                timestamp: new Date().toLocaleTimeString(),
-                type: 'file',
-            };
-            setMessages((prevMessages) => [...prevMessages, userMessage]);
+            setMessages((prevMessages) => [...prevMessages, userPrompt]);
+
             setInputFile(null);
-        }
-
-        if (inputMessage.trim() !== '') {
-            const userMessage = {
-                sender: 'user',
-                text: inputMessage,
-                timestamp: new Date().toLocaleTimeString(),
-                type: 'text',
-            };
-            setMessages((prevMessages) => [...prevMessages, userMessage]);
             setInputMessage('');
-        }
+            setIsSending(true);
 
-
-        // TODO: teste de desenvolvimento de interface
-        const botMessage = {
-            sender: 'bot',
-            text: `ChatGPT está respondendo à sua mensagem: '${inputMessage}'`,
-            timestamp: new Date().toLocaleTimeString(),
-            type: 'text'
-        };
-
-        setTimeout(() => {
-            setMessages((prevMessages) => [...prevMessages, botMessage]);
-        }, 1000);
+            sendPromptForGemini(userPrompt)
+                .then((response) => {
+                    setMessages((prevMessages) => [...prevMessages, constructBotResponse(response)]);
+                    setIsSending(false);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        } else
+            return;
     };
+
+    function constructUserPrompt(inputMessage, inputFile) {
+        return {
+            sender: 'user',
+            type: inputFile ? 'file' : 'text',
+            text: inputMessage.trim() || '',
+            file: inputFile || null,
+            base64: base64File,
+            mimetype: inputFile?.type || '',
+        };
+    }
+
+    function constructBotResponse(response) {
+        return {
+            sender: 'bot',
+            type: 'text',
+            text: response
+        };
+    }
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setInputFile(file);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setBase64File(reader.result);
+            console.log("Arquivo em Base64:", reader.result);
+        };
+        
+        reader.readAsDataURL(file);
+
+        e.target.value = null;
+    }
 
     /* TODO: 
     - incluir scroll no input text
@@ -79,7 +99,7 @@ const ChatWorkspace = () => {
                         <img width='40' src={user} alt='Pefil de usuário' />
                     </div>
                 </nav>
-                
+
                 <div className='col-xl-6 col-md-8 col-10'>
                     <div className='chat-container'>
                         <div className='scroll-content chat-messages'>
@@ -88,11 +108,13 @@ const ChatWorkspace = () => {
                                     key={index}
                                     className={`chat-message ${message.sender === 'user' ? 'user-message' : 'bot-message'}`}>
                                     {message.type === 'text' && (
-                                        <span className='message-text'>{message.text}</span>
+                                        <span className='message-text'>
+                                            <ReactMarkdown>{message.text}</ReactMarkdown>
+                                        </span>
                                     )}
                                     {message.type === 'file' && (
                                         <div>
-                                            <FileMessageBox file={message.image} />
+                                            <FileMessageBox file={message.file} />
                                         </div>
                                     )}
                                 </div>
@@ -111,21 +133,21 @@ const ChatWorkspace = () => {
                                     <input
                                         type='file'
                                         accept='.pdf, .png, .jpg'
-                                        onChange={(e) => {
-                                            setInputFile(e.target.files[0])
-                                            e.target.value = null;
-                                        }} />
+                                        onChange={handleFileChange} />
                                 </label>
                                 <input
                                     type='text'
                                     placeholder='Mensagem... '
                                     value={inputMessage}
                                     onChange={(e) => setInputMessage(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                                    onKeyDown={(e) => isSending ? e.preventDefault() : e.key === 'Enter' && submitMessage()}
                                 />
                                 <div>
-                                    <label className='send-message-label' onClick={sendMessage}>
-                                        <img width='24' src={arrowUp} alt='Enviar' />
+                                    <label className={`send-message-label ${isSending ? 'send-button-disabled' : ''}`}
+                                        onClick={!isSending ? submitMessage : undefined}>
+                                        <img width='24'
+                                            src={arrowUp}
+                                            alt='Enviar' />
                                     </label>
                                 </div>
                             </div>
@@ -133,7 +155,7 @@ const ChatWorkspace = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 
