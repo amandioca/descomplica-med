@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
 :root {
     --color-blue-primary: #3596FF;
     --color-blue-secondary: #005DC1;
@@ -12,8 +14,23 @@
     --color-black: #262829;
 }
 
+body {
+    background-color: var(--color-gray-midnight) !important;
+    min-height: 100vh !important;
+    color: white !important;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
+}
+
 .form-input::placeholder {
-    color: var(--color-gray-soft); 
+    color: var(--color-gray-soft);
 }
 
 .scroll-content {
@@ -22,12 +39,12 @@
     word-wrap: break-word;
 }
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
     width: 12px;
     padding: 5px;
 }
 
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
     background-color: var(--color-gray-soft);
     border-radius: 50px;
     border: 2px solid var(--color-gray-shadow)
