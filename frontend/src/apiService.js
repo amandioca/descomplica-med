@@ -36,6 +36,20 @@ async function sendPromptForGemini(userPrompt) {
     }
 }
 
+async function sendUserForRegister(user) {
+    try {        
+        return request(
+            '/users/register',
+            'POST',
+            user
+        );
+    } catch (error) {
+        console.error('Error sending prompt to Gemini:', error.message);
+        throw error;
+    }
+}
+
 export {
     sendPromptForGemini,
+    sendUserForRegister,
 }

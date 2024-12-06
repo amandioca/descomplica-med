@@ -1,11 +1,13 @@
-import React from 'react';
-import Button from '../components/Button';
+
+import React, { useRef } from 'react';
 import SignupForms from '../forms/SignupForm';
 import Container from '../components/Container';
 import { UnauthNavbar } from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+    const signupFormRef = useRef();
+
     const isRegistered = true;
 
     const navigate = useNavigate();
@@ -14,7 +16,11 @@ const Signup = () => {
         navigate('/login')
     };
 
-    const handleRegistration = () => {
+    const handleSubmit = () => {
+        if (!signupFormRef.current.submitRegister()) {
+            return;
+        }
+
         if (isRegistered) {
             navigate('/chat');
         } else {
@@ -41,9 +47,9 @@ const Signup = () => {
                         <div style={{ padding: '0px 30px' }}>
                             <h5 align='center' style={titleStyle}>Cadastre-se</h5>
                             <hr style={lineStyle} />
-                            <SignupForms />
+                            <SignupForms ref={signupFormRef} />
                             <div align='center'>
-                                <button onClick={handleRegistration} style={buttonStyle} type='submit' class='btn'>Cadastrar</button>
+                                <button onClick={handleSubmit} style={buttonStyle} type='submit' class='btn'>Cadastrar</button>
                             </div>
                         </div>
                     </Container>
