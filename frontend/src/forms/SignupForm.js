@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, forwardRef } from 'react';
 import InputMask from 'react-input-mask';
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { FaRegCheckCircle } from 'react-icons/fa'
+import '../styles/SignupForm.css';
+import '../styles/global.css'
 import '../styles/global.css'
 import { sendUserForRegister } from '../apiService';
 
-const SignupForms = (ref) => {
-    const inputStyle = { backgroundColor: 'var(--color-gray-medium)', border: '1px solid var(--color-gray)', color: 'var(--color-white)' }
+const SignupForms = forwardRef((ref) => {
+    const [showTooltipPass, setShowTooltipPass] = useState(false);
     const [name, setName] = useState('');
     const [cpf, setCpf] = useState('');
     const [pass, setPass] = useState('');
@@ -20,24 +23,29 @@ const SignupForms = (ref) => {
     });
     const equalsPassword = pass === confirmPass;
 
-    const submitRegister = (ref) => {
+    // useImperativeHandle(ref, () => ({
+    //     submitRegister,
+    // }));
+
+    const submitRegister = () => {
         const isValidPass = Object.values(validationPass).every((value) => value === true);
 
         if (validationCpf && isValidPass && equalsPassword) {
-            // TODO: CHECAR CONSTRUTOR
             const user = constructUserRegister();
-
-            alert('Cadastro realizado com sucesso!');
+            console.log(user);
 
             sendUserForRegister(user)
                 .then((response) => {
-
+                    if (true) {
+                        alert('Cadastro realizado com sucesso!');
+                    }
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         } else
-            return;
+            alert('Preencha todos os campos corretamente!');
+        return;
     }
 
     function constructUserRegister() {
@@ -69,48 +77,64 @@ const SignupForms = (ref) => {
         });
     }
 
+    const renderValidationItem = (text, isValid) => (
+        <li style={{ display: 'flex', alignItems: 'center', color: isValid ? 'green' : 'red' }}>
+            <FaRegCheckCircle style={{ marginRight: 8, color: isValid ? 'green' : 'red' }} />
+            {text}
+        </li>
+    );
+
     return (
         <div style={{ marginTop: 40, marginBottom: 60 }}>
             <div class='mb-3'>
                 <label for='name' class='form-label'>Nome Completo:</label>
                 <input id='name'
-                    style={inputStyle}
-                    class='form-control form-input'
+                    class='form-control form-input input'
                     onChange={(e) => setName(e.target.value)}
                     placeholder='João Silva dos Santos' />
             </div>
             <div class='mb-3'>
                 <label for='cpf' class='form-label'>CPF:</label>
                 <InputMask id='cpf'
-                    style={inputStyle}
-                    class='form-control form-input'
+                    class='form-control form-input input'
                     onChange={(e) => handleCpf(e.target.value)}
                     value={cpf}
                     mask="999.999.999-99"
                     placeholder='000.000.000-00' />
             </div>
-            <div class='mb-3'>
-                <label for='pass' class='form-label'>Senha:</label>
+            <div className='mb-3'>
+                <label htmlFor='pass' className='form-label'>Senha:</label>
                 <input id='pass'
-                    style={inputStyle}
-                    class='form-control form-input'
+                    className='form-control form-input input'
                     onChange={(e) => handlePassword(e.target.value)}
+                    onFocus={() => setShowTooltipPass(true)}
+                    onBlur={() => setShowTooltipPass(false)}
                     value={pass}
                     type='password'
                     placeholder='••••••••' />
+                {showTooltipPass && (
+                    <div className='tooltip-password'>
+                        <ul style={{ margin: 0, padding: '10px 15px', listStyle: 'none' }}>
+                            {renderValidationItem('Pelo menos 8 caracteres', validationPass.length)}
+                            {renderValidationItem('Pelo menos uma letra minúscula', validationPass.lowercase)}
+                            {renderValidationItem('Pelo menos uma letra maiúscula', validationPass.uppercase)}
+                            {renderValidationItem('Pelo menos um número', validationPass.number)}
+                            {renderValidationItem('Pelo menos um símbolo', validationPass.symbol)}
+                        </ul>
+                    </div>
+                )}
             </div>
             <div class='mb-3'>
                 <label for='confirmPass' className='form-label'>Confirme a senha:</label>
                 <input id='confirmPass'
-                    style={inputStyle}
-                    class='form-control form-input'
+                    class='form-control form-input input'
                     onChange={(e) => setConfirmPass(e.target.value)}
                     value={confirmPass}
                     type='password'
                     placeholder='••••••••' />
             </div>
-        </div>
+        </div >
     )
-}
+});
 
 export default SignupForms;
