@@ -11,13 +11,6 @@ const LoginForms = () => {
     const [cpf, setCpf] = useState('');
     const [pass, setPass] = useState('');
     const [validationCpf, setValidationCpf] = useState(false);
-    const [validationPass, setValidationPass] = useState({
-        length: false,
-        number: false,
-        lowercase: false,
-        uppercase: false,
-        symbol: false,
-    });
 
     useEffect(() => {
         if (location.state?.cpf)
@@ -31,18 +24,6 @@ const LoginForms = () => {
             setValidationCpf(true);
         else
             setValidationCpf(false);
-    }
-
-    const handlePassword = (input) => {
-        setPass(input)
-
-        setValidationPass({
-            length: input.length >= 8,
-            lowercase: /[a-z]/.test(input),
-            uppercase: /[A-Z]/.test(input),
-            number: /[0-9]/.test(input),
-            symbol: /[^a-zA-Z0-9]/.test(input),
-        });
     }
 
     return (
