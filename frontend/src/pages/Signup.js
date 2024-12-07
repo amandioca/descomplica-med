@@ -2,35 +2,28 @@
 import React, { useRef } from 'react';
 import SignupForms from '../forms/SignupForm';
 import Container from '../components/Container';
+import '../styles/global.css';
 import { UnauthNavbar } from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
     const signupFormRef = useRef();
-
-    const isRegistered = true;
-
     const navigate = useNavigate();
 
     const redirectLogin = () => {
         navigate('/login')
     };
 
-    const handleSubmit = () => {
-        if (!signupFormRef.current.submitRegister()) {
-            return;
-        }
+    const handleSubmit = async () => {
+        const response = await signupFormRef.current.submitRegister();
 
-        if (isRegistered) {
-            navigate('/chat');
-        } else {
-            alert("Credenciais inválidas");
+        if (response) {
+            redirectLogin();
         }
+        return;
     };
 
-    const lineStyle = { border: '1px solid var(--color-gray)', marginTop: 15 }
-    const titleStyle = { fontWeight: 400 }
-    const buttonStyle = {
+    const btnStyle = {
         backgroundColor: 'var(--color-blue-primary)',
         color: '#FFF',
         padding: '5px 15px',
@@ -45,11 +38,19 @@ const Signup = () => {
                 <div>
                     <Container>
                         <div style={{ padding: '0px 30px' }}>
-                            <h5 align='center' style={titleStyle}>Cadastre-se</h5>
-                            <hr style={lineStyle} />
+                            <h5 align='center'
+                                className='title-forms'>
+                                Cadastre-se
+                            </h5>
+                            <hr className='divisor-forms' />
                             <SignupForms ref={signupFormRef} />
                             <div align='center'>
-                                <button onClick={handleSubmit} style={buttonStyle} type='submit' class='btn'>Cadastrar</button>
+                                <button onClick={handleSubmit}
+                                    style={btnStyle}
+                                    className='btn'
+                                    type='submit'>
+                                    Cadastrar
+                                </button>
                             </div>
                         </div>
                     </Container>

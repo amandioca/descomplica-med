@@ -29,6 +29,15 @@ code {
         monospace;
 }
 
+.divisor-forms {
+    border: 1px solid var(--color-gray);
+    margin-top: 15;
+}
+
+.title-forms {
+    font-weight: 400
+}
+
 .form-input::placeholder {
     color: var(--color-gray-soft);
 }

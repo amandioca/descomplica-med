@@ -26,21 +26,19 @@ const SignupForms = forwardRef((props, ref) => {
         submitRegister,
     }));
 
-    const submitRegister = () => {
+    const submitRegister = async () => {
         const isValidPass = Object.values(validationPass).every((value) => value === true);
 
         if (validationCpf && isValidPass && equalsPassword) {
             const user = constructUserRegister();
-            console.log(user);
 
-            sendUserForRegister(user)
-                .then((response) => {
-                    console.log(response);
-                    alert('Cadastro realizado com sucesso!');
-                })
-                .catch((error) => {
-                    alert(error.response.data.message);
-                });
+            try {
+                const response = await sendUserForRegister(user);
+                alert('Cadastro realizado com sucesso!');
+                return response;
+            } catch (error) {
+                alert(error.response.data.message);
+            }
         } else
             alert('Preencha todos os campos corretamente!');
         return;
@@ -78,20 +76,6 @@ const SignupForms = forwardRef((props, ref) => {
     const handleConfirmPassword = (input) => {
         setConfirmPass(input);
     };
-
-    const cleanForms = () => {
-        setName('');
-        setCpf('');
-        setPass('');
-        setConfirmPass('');
-        setValidationPass({
-            length: false,
-            number: false,
-            lowercase: false,
-            uppercase: false,
-            symbol: false,
-        });
-    }
 
     const renderValidationItem = (text, isValid) => (
         <li style={{ display: 'flex', alignItems: 'center', color: isValid ? 'green' : 'red' }}>
