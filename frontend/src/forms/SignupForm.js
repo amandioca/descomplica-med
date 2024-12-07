@@ -3,8 +3,7 @@ import InputMask from 'react-input-mask';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { FaRegCheckCircle } from 'react-icons/fa'
 import '../styles/SignupForm.css';
-import '../styles/global.css'
-import '../styles/global.css'
+import '../styles/global.css';
 import { sendUserForRegister } from '../apiService';
 
 const SignupForms = forwardRef((ref) => {
@@ -21,7 +20,7 @@ const SignupForms = forwardRef((ref) => {
         uppercase: false,
         symbol: false,
     });
-    const equalsPassword = pass === confirmPass;
+    const equalsPassword = confirmPass !== '' && pass === confirmPass;
 
     // useImperativeHandle(ref, () => ({
     //     submitRegister,
@@ -77,6 +76,10 @@ const SignupForms = forwardRef((ref) => {
         });
     }
 
+    const handleConfirmPassword = (input) => {
+        setConfirmPass(input);
+    };
+
     const renderValidationItem = (text, isValid) => (
         <li style={{ display: 'flex', alignItems: 'center', color: isValid ? 'green' : 'red' }}>
             <FaRegCheckCircle style={{ marginRight: 8, color: isValid ? 'green' : 'red' }} />
@@ -85,7 +88,7 @@ const SignupForms = forwardRef((ref) => {
     );
 
     return (
-        <div style={{ marginTop: 40, marginBottom: 60 }}>
+        <form style={{ marginTop: 40, marginBottom: 60 }}>
             <div class='mb-3'>
                 <label for='name' class='form-label'>Nome Completo:</label>
                 <input id='name'
@@ -99,8 +102,9 @@ const SignupForms = forwardRef((ref) => {
                     class='form-control form-input input'
                     onChange={(e) => handleCpf(e.target.value)}
                     value={cpf}
-                    mask="999.999.999-99"
-                    placeholder='000.000.000-00' />
+                    mask='999.999.999-99'
+                    placeholder='000.000.000-00'
+                    autoComplete='username' />
             </div>
             <div className='mb-3'>
                 <label htmlFor='pass' className='form-label'>Senha:</label>
@@ -111,7 +115,9 @@ const SignupForms = forwardRef((ref) => {
                     onBlur={() => setShowTooltipPass(false)}
                     value={pass}
                     type='password'
-                    placeholder='••••••••' />
+                    placeholder='••••••••'
+                    autoComplete='new-password'
+                />
                 {showTooltipPass && (
                     <div className='tooltip-password'>
                         <ul style={{ margin: 0, padding: '10px 15px', listStyle: 'none' }}>
@@ -124,16 +130,26 @@ const SignupForms = forwardRef((ref) => {
                     </div>
                 )}
             </div>
-            <div class='mb-3'>
-                <label for='confirmPass' className='form-label'>Confirme a senha:</label>
-                <input id='confirmPass'
-                    class='form-control form-input input'
-                    onChange={(e) => setConfirmPass(e.target.value)}
-                    value={confirmPass}
-                    type='password'
-                    placeholder='••••••••' />
+            <div className="mb-3 input-container">
+                <label htmlFor="confirmPass" className="form-label">Confirme a senha:</label>
+                <div style={{ position: 'relative' }}>
+                    <input
+                        id="confirmPass"
+                        className="form-control form-input input"
+                        style={{ paddingRight: '40px' }}
+                        onChange={(e) => handleConfirmPassword(e.target.value)}
+                        value={confirmPass}
+                        type="password"
+                        placeholder="••••••••"
+                        autoComplete='new-password'
+                    />
+                    <FaRegCheckCircle className='icon-confirm-pass'
+                        style={{
+                            color: equalsPassword ? 'green' : 'red'
+                        }} />
+                </div>
             </div>
-        </div >
+        </form >
     )
 });
 
