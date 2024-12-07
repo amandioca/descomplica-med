@@ -7,10 +7,17 @@ import '../styles/Navbar.css'
 const appName = 'Descomplica Med';
 
 const AuthNavbar = () => {
+  const navigate = useNavigate();
+
+  const redirectHome = () => {
+    navigate('/')
+  };
+
   return (
     <div className='navbar-size navbar-bg-auth navbar-center'>
       <a href='#'>
         <img src={logo}
+          onClick={redirectHome}
           alt={appName}
           width='40' />
       </a>
@@ -27,9 +34,13 @@ const UnauthNavbar = () => {
 
   return (
     <div className='navbar-size navbar-bg-unauth navbar-center'>
-      <a className='navbar-brand' href='#'>
+      <a className='navbar-brand'
+        href='#'
+        onClick={(e) => {
+          e.preventDefault();
+          redirectHome();
+        }}>
         <img className='margin-10'
-          onClick={redirectHome}
           src={logoWhite}
           alt={appName}
           width='40' />
