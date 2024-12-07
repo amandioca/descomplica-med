@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import InputMask from 'react-input-mask';
 import { useLocation } from 'react-router-dom';
+import { sendUserForLogin } from '../apiService';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/global.css'
 
@@ -8,6 +9,19 @@ const LoginForms = () => {
     const location = useLocation();
     const [cpf, setCpf] = useState('');
     const [pass, setPass] = useState('');
+
+    const submitLogin = async() => {
+        if (cpf.length === 14 && pass) {
+            try {
+                const response = await sendUserForLogin(cpf, pass);
+                alert('Login realizado com sucesso!');
+                return response;
+            } catch (error) {
+                alert('Verifique as credenciais e tente novamente.');
+            }
+        } else 
+            return;
+    }
 
     useEffect(() => {
         if (location.state?.cpf)

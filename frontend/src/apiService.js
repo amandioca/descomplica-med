@@ -48,7 +48,21 @@ async function sendUserForRegister(user) {
     }
 }
 
+async function sendUserForLogin(user) {
+    try {
+        return await request(
+            '/users/login',
+            'POST',
+            user
+        );
+    } catch (error) {
+        console.error('Error in login user:', error.response.data.message);
+        throw error;
+    }
+}
+
 export {
     sendPromptForGemini,
     sendUserForRegister,
+    sendUserForLogin,
 }
