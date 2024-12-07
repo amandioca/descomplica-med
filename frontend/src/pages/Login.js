@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Button from '../components/Button';
 import LoginForm from '../forms/LoginForm';
 import Container from '../components/Container';
@@ -6,20 +6,19 @@ import { UnauthNavbar } from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-    const isAuthenticated = true;
-
+    const loginFormRef = useRef();
     const navigate = useNavigate();
 
     const redirectSignup = () => {
         navigate('/signup')
     };
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
+        const isAuthenticated = await loginFormRef.current.submitLogin();
         if (isAuthenticated) {
             navigate('/chat');
-        } else {
-            alert("Credenciais inválidas");
         }
+        return;
     };
 
     const lineStyle = { border: '1px solid var(--color-gray)', marginTop: 15 }
@@ -41,7 +40,7 @@ const Login = () => {
                         <div style={{ padding: '0px 30px' }}>
                             <h5 align='center' style={titleStyle}>Acesse sua Conta</h5>
                             <hr style={lineStyle} />
-                            <LoginForm />
+                            <LoginForm ref={loginFormRef} />
                             <div align='center'>
                                 <button onClick={handleLogin} style={buttonStyle} type='submit' class='btn'>Entrar</button>
                             </div>
@@ -49,9 +48,12 @@ const Login = () => {
                     </Container>
                     <div align='center' style={{ paddingTop: 20, fontSize: 14 }}>
                         <a
-                            href=''
+                            href="#"
                             style={{ color: 'var(--color-blue-primary)' }}
-                            onClick={redirectSignup}>
+                            onClick={(e) => {
+                                e.preventDefault();
+                                redirectSignup();
+                            }}>
                             Ainda não possui conta?
                             <br />
                             <b> Clique aqui para cadastrar</b>

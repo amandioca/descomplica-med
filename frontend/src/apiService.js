@@ -48,15 +48,15 @@ async function sendUserForRegister(user) {
     }
 }
 
-async function sendUserForLogin(user) {
+async function sendUserForLogin(credentials) {
     try {
         return await request(
             '/users/login',
             'POST',
-            user
+            credentials
         );
     } catch (error) {
-        console.error('Error in login user:', error.response.data.message);
+        console.info('Error in login user:', error.response.data.message);
         throw error;
     }
 }

@@ -4,6 +4,7 @@ import { AuthNavbar } from '../components/Navbar';
 import ReactMarkdown from 'react-markdown';
 import paperclip from '../assets/svgs/paperclip.svg'
 import arrowUp from '../assets/svgs/arrow-up.svg'
+import user from '../assets/svgs/user.svg'
 import character from '../assets/images/character.jpeg'
 import FileMessageBox from '../components/FileMessageBox';
 import { sendPromptForGemini } from '../apiService';
@@ -110,7 +111,7 @@ const ChatWorkspace = () => {
                                     {message.type === 'text' && (
                                         <>
                                             {message.sender === 'bot' && (
-                                                <img style={{marginTop: 10, borderRadius: 50}} src={character} alt='ícone de usuário' height='32'></img>
+                                                <img style={{ marginTop: 10, borderRadius: 50 }} src={character} alt='ícone de usuário' height='32'></img>
                                             )}
 
                                             <span className='message-text'>

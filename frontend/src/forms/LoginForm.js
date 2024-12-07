@@ -1,26 +1,45 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import InputMask from 'react-input-mask';
 import { useLocation } from 'react-router-dom';
 import { sendUserForLogin } from '../apiService';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/global.css'
 
-const LoginForms = () => {
+const LoginForms = forwardRef((props, ref) => {
     const location = useLocation();
     const [cpf, setCpf] = useState('');
     const [pass, setPass] = useState('');
 
-    const submitLogin = async() => {
-        if (cpf.length === 14 && pass) {
-            try {
-                const response = await sendUserForLogin(cpf, pass);
-                alert('Login realizado com sucesso!');
-                return response;
-            } catch (error) {
-                alert('Verifique as credenciais e tente novamente.');
-            }
-        } else 
+    useImperativeHandle(ref, () => ({
+        submitLogin,
+    }));
+
+    const submitLogin = async () => {
+        if (cpf.length < 14) {
+            alert('Por favor, insira um CPF válido.');
             return;
+        }
+        if (!pass) {
+            alert('Por favor, insira sua senha.');
+            return;
+        }
+
+        try {
+            const response = await sendUserForLogin(credentials);
+            if (response === 'OK') {
+                alert('Login realizado com sucesso!');
+                return true;
+            } else {
+                alert('Credenciais inválidas.');
+            }
+        } catch (error) {
+            alert(error.response?.data?.message || 'Erro ao realizar login.');
+        }
+    };
+
+    const credentials = {
+        cpf: cpf.replace(/\D/g, ''),
+        password: pass,
     }
 
     useEffect(() => {
@@ -54,6 +73,6 @@ const LoginForms = () => {
             </div>
         </form>
     )
-}
+})
 
 export default LoginForms;
