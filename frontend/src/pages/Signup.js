@@ -14,11 +14,16 @@ const Signup = () => {
         navigate('/login')
     };
 
+    const redirectLoginCpf = (cpf) => {
+        navigate('/login', { state: { cpf } })
+    };
+
     const handleSubmit = async () => {
         const response = await signupFormRef.current.submitRegister();
 
+        console.log(response);
         if (response) {
-            redirectLogin();
+            redirectLoginCpf(response.cpf);
         }
         return;
     };
