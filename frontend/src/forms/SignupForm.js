@@ -1,4 +1,4 @@
-import React, { useState, useRef, forwardRef } from 'react';
+import React, { useState, forwardRef, useImperativeHandle } from 'react';
 import InputMask from 'react-input-mask';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { FaRegCheckCircle } from 'react-icons/fa'
@@ -6,7 +6,7 @@ import '../styles/SignupForm.css';
 import '../styles/global.css';
 import { sendUserForRegister } from '../apiService';
 
-const SignupForms = forwardRef((ref) => {
+const SignupForms = forwardRef((props, ref) => {
     const [showTooltipPass, setShowTooltipPass] = useState(false);
     const [name, setName] = useState('');
     const [cpf, setCpf] = useState('');
@@ -22,9 +22,9 @@ const SignupForms = forwardRef((ref) => {
     });
     const equalsPassword = confirmPass !== '' && pass === confirmPass;
 
-    // useImperativeHandle(ref, () => ({
-    //     submitRegister,
-    // }));
+    useImperativeHandle(ref, () => ({
+        submitRegister,
+    }));
 
     const submitRegister = () => {
         const isValidPass = Object.values(validationPass).every((value) => value === true);
@@ -35,12 +35,11 @@ const SignupForms = forwardRef((ref) => {
 
             sendUserForRegister(user)
                 .then((response) => {
-                    if (true) {
-                        alert('Cadastro realizado com sucesso!');
-                    }
+                    console.log(response);
+                    alert('Cadastro realizado com sucesso!');
                 })
                 .catch((error) => {
-                    console.log(error);
+                    alert(error.response.data.message);
                 });
         } else
             alert('Preencha todos os campos corretamente!');
@@ -49,7 +48,7 @@ const SignupForms = forwardRef((ref) => {
 
     function constructUserRegister() {
         return {
-            cpf: cpf,
+            cpf: cpf.replace(/\D/g, ''),
             fullName: name.trim(),
             password: pass,
         }
@@ -80,6 +79,20 @@ const SignupForms = forwardRef((ref) => {
         setConfirmPass(input);
     };
 
+    const cleanForms = () => {
+        setName('');
+        setCpf('');
+        setPass('');
+        setConfirmPass('');
+        setValidationPass({
+            length: false,
+            number: false,
+            lowercase: false,
+            uppercase: false,
+            symbol: false,
+        });
+    }
+
     const renderValidationItem = (text, isValid) => (
         <li style={{ display: 'flex', alignItems: 'center', color: isValid ? 'green' : 'red' }}>
             <FaRegCheckCircle style={{ marginRight: 8, color: isValid ? 'green' : 'red' }} />
@@ -94,7 +107,8 @@ const SignupForms = forwardRef((ref) => {
                 <input id='name'
                     class='form-control form-input input'
                     onChange={(e) => setName(e.target.value)}
-                    placeholder='João Silva dos Santos' />
+                    placeholder='João Silva dos Santos'
+                    autoComplete='full-name' />
             </div>
             <div class='mb-3'>
                 <label for='cpf' class='form-label'>CPF:</label>
@@ -104,7 +118,7 @@ const SignupForms = forwardRef((ref) => {
                     value={cpf}
                     mask='999.999.999-99'
                     placeholder='000.000.000-00'
-                    autoComplete='username' />
+                    autoComplete='cpf' />
             </div>
             <div className='mb-3'>
                 <label htmlFor='pass' className='form-label'>Senha:</label>

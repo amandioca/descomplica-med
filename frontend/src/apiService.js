@@ -17,14 +17,13 @@ const request = async (url, method = 'GET', body = null, headers = {}) => {
         const response = await axios(config);
         return response.data;
     } catch (error) {
-        console.log('Error:', error);
-        const errorMessage = error.response?.data?.message || error.message || 'Something went wrong';
-        throw new Error('Error in submit request: ', errorMessage);
+        console.error('Error in request:', error);
+        throw error;
     }
 };
 
 async function sendPromptForGemini(userPrompt) {
-    try {        
+    try {
         return request(
             '/messages/send-prompt',
             'POST',
@@ -37,14 +36,14 @@ async function sendPromptForGemini(userPrompt) {
 }
 
 async function sendUserForRegister(user) {
-    try {        
-        return request(
+    try {
+        return await request(
             '/users/register',
             'POST',
             user
         );
     } catch (error) {
-        console.error('Error sending prompt to Gemini:', error.message);
+        console.error('Error in register user:', error.response.data.message);
         throw error;
     }
 }
